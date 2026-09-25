@@ -1,0 +1,59 @@
+/* 宿題タイマー（timer/）だけの見た目。色は style.css のトークンに 2 色（べんきょう・やすみ）を足す */
+:root { --t-work: #d2553a; --t-rest: #3f8f5a; }
+@media (prefers-color-scheme: dark) { :root { --t-work: #e8795f; --t-rest: #6cc08a; } }
+
+.t-header { padding: 0.8rem 1rem 0.6rem; }
+.t-header .subtitle { margin-top: 0.1rem; }
+.t-main { text-align: center; padding-top: 0.6rem; }
+
+/* 分のボタン */
+.t-presets { border: none; min-width: 0; margin: 0 0 0.4rem; }
+.t-presets legend { font-weight: 700; color: var(--accent); margin: 0 auto 0.3rem; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem; }
+.chips button {
+  min-width: 44px; min-height: 44px; padding: 0 0.3rem; border-radius: 22px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text); font: inherit; font-size: 1rem; font-weight: 700; cursor: pointer; font-variant-numeric: tabular-nums;
+}
+.chips button[aria-pressed="true"] { background: var(--accent); color: var(--card); border-color: var(--accent); }
+.chips button:focus-visible, .t-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.t-adjust { display: flex; align-items: center; justify-content: center; gap: 0.8rem; margin-top: 0.4rem; }
+.t-step { min-width: 56px; min-height: 44px; }
+.t-min { min-width: 4.5em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.is-running .t-presets { opacity: 0.45; }
+
+/* 円・棒 */
+.t-what { font-weight: 700; font-size: 1.1rem; min-height: 1.6em; margin: 0.2rem 0; overflow-wrap: anywhere; }
+.dial { position: relative; width: min(74vw, 40vh, 340px); aspect-ratio: 1; margin: 0 auto; }
+.dial-svg { width: 100%; height: 100%; display: block; }
+.dial-bg { fill: var(--bg-2); stroke: var(--border); stroke-width: 2; }
+.pie { fill: var(--t-work); }
+.is-rest .pie, .is-rest .bar-fill { fill: var(--t-rest); background: var(--t-rest); }
+.dial-hole { fill: var(--card); }
+.t-time {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: clamp(1.6rem, 9vw, 2.6rem); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text);
+}
+.t-time.is-long { font-size: clamp(1.2rem, 6.5vw, 1.9rem); }
+.dial.is-bar { aspect-ratio: auto; width: min(92vw, 560px); }
+.dial.is-bar .dial-svg { display: none; }
+.bar { height: 72px; border-radius: 12px; background: var(--bg-2); border: 2px solid var(--border); overflow: hidden; }
+.bar-fill { height: 100%; width: 100%; background: var(--t-work); transform-origin: left center; }
+.dial.is-bar .t-time { position: static; margin-top: 0.4rem; }
+
+.t-phase { font-size: 0.95rem; color: var(--muted); min-height: 1.5em; margin-top: 0.3rem; }
+.t-ctrl { justify-content: center; margin: 0.5rem 0 0.2rem; }
+.t-start { min-width: 9em; min-height: 56px; font-size: 1.2rem; border-radius: 28px; }
+.t-ctrl .btn-sub { min-height: 56px; border-radius: 28px; }
+.t-status { min-height: 1.5em; font-weight: 700; color: var(--accent); }
+.t-main details { text-align: left; margin-top: 0.8rem; }
+.t-guide { margin-top: 0.8rem; }
+
+/* おわったとき: 円がふわっと光る（動きを減らす設定では光らせない） */
+.is-done .dial-bg { stroke: var(--accent); stroke-width: 6; }
+.is-done .t-time { color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .is-done .dial { animation: t-done 1.2s ease-in-out 3; }
+  @keyframes t-done { 50% { transform: scale(1.04); } }
+}
+
+.opts { display: flex; flex-wrap: wrap; column-gap: 1.2rem; }

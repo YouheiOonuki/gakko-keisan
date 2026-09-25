@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宿題タイマーの使い方（残り時間が見える・くり返し・音が鳴らないとき）｜学校の計算機｜yorozu-craft</title>
+  <meta name="description" content="子ども向けの宿題タイマーの使い方。残り時間が円か棒で減る見方、25分＋5分のようなくり返し、音が鳴らないとき・画面が消えるときの確かめ方をまとめました。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/timer/guide.html">
+
+  <meta property="og:title" content="宿題タイマーの使い方｜学校の計算機">
+  <meta property="og:description" content="残り時間の見方、くり返し、音が鳴らないとき・画面が消えるときの確かめ方。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/timer/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "宿題タイマーで25分勉強して5分休むくり返しはできますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "できます。「せってい」の「くり返す」にチェックを入れ、やすみの分と回数を入れます。やすみに入るときと戻るときに、それぞれ違う短い音が鳴ります。" }
+      },
+      {
+        "@type": "Question",
+        "name": "タイマーの途中で別のアプリを開いたらどうなりますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "時間は端末の時計で数えているので、戻ったときに正しい残りが出ます。離れているあいだは音が鳴らないことがあります。ページを閉じるとタイマーは止まります。" }
+      },
+      {
+        "@type": "Question",
+        "name": "音を鳴らさずに使えますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "「せってい」の「おわりの音」で「鳴らさない」を選びます。おわったことは画面の文字と円のふちの色でわかります。" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。保護者向けの読みものページなので広告を出す -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>宿題タイマーの使い方</h1>
+    <p class="subtitle">おうちの方へ: 見方・くり返し・音と画面の設定</p>
+  </header>
+
+  <main class="app-main">
+
+    <p class="card" style="text-align:center"><a href="./">▶ 宿題タイマーを開く</a></p>
+
+    <article class="card content" id="howto">
+      <h2>使い方</h2>
+      <ol>
+        <li>「なんぷん？」のボタンか「−1」「＋1」で時間を決めます。</li>
+        <li>「スタート」を押すと、円（または棒）が減りはじめます。</li>
+        <li>「とめる」で一時停止、「つづける」で再開します。</li>
+        <li>おわると短い音が鳴り、「おわり」と出ます。</li>
+      </ol>
+    </article>
+
+    <article class="card content" id="view">
+      <h2>残り時間が見えるタイマーの見方</h2>
+      <p>色のついた部分が残りの時間です。スタートしたときは円が全部塗られていて、時間がたつと12時の位置に向かって減っていきます。数字が読めなくても、色の広さで残りがわかります。やすみのあいだは緑になります。</p>
+      <p>「せってい」で棒の形にも変えられます。時間は1分から120分まで入れられます。</p>
+    </article>
+
+    <article class="card content" id="trouble">
+      <h2>音が鳴らないとき・画面が消えるとき</h2>
+      <ul>
+        <li>音は小さめが最初の設定です。「音をためす」で確かめ、端末の音量とマナーモードも見てください。</li>
+        <li>「動いているあいだは画面を消さない」は、ブラウザの Screen Wake Lock という仕組みを使います。対応していないブラウザでは、端末の自動ロックの時間を長くしてください。</li>
+        <li>別のアプリやタブに切り替えると画面を消さない設定は外れ、戻るとかけ直します。</li>
+      </ul>
+      <p>根拠: W3C Screen Wake Lock API（別のタブに移るとロックが外れる仕様）。最終確認日 2026年9月25日。</p>
+      <details>
+        <summary>仕様の原文</summary>
+        <ul>
+          <li><a href="https://www.w3.org/TR/screen-wake-lock/" target="_blank" rel="noopener noreferrer">Screen Wake Lock API（W3C）</a>：ページが見えなくなると、画面のロックは自動で外れる</li>
+          <li><a href="https://developer.mozilla.org/ja/docs/Web/API/Screen_Wake_Lock_API" target="_blank" rel="noopener noreferrer">画面起動ロック API（MDN）</a>：対応しているブラウザの一覧</li>
+        </ul>
+      </details>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq">
+        <dt>宿題タイマーで25分勉強して5分休むくり返しはできますか？</dt>
+        <dd>できます。「せってい」の「くり返す」にチェックを入れ、やすみの分と回数を入れます。やすみに入るときと戻るときに、それぞれ違う短い音が鳴ります。</dd>
+        <dt>タイマーの途中で別のアプリを開いたらどうなりますか？</dt>
+        <dd>時間は端末の時計で数えているので、戻ったときに正しい残りが出ます。離れているあいだは音が鳴らないことがあります。ページを閉じるとタイマーは止まります。</dd>
+        <dt>音を鳴らさずに使えますか？</dt>
+        <dd>「せってい」の「おわりの音」で「鳴らさない」を選びます。おわったことは画面の文字と円のふちの色でわかります。</dd>
+      </dl>
+    </article>
+
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul>
+        <li><strong>広告</strong>：お子さんが使うタイマーの画面には広告を出していません（このページには出ます）。</li>
+        <li><strong>音</strong>：音はブラウザの中で作っていて、音のファイルや外部のサービスは使いません。</li>
+        <li><strong>保存されるデータ</strong>：せっていはこの端末のブラウザ（localStorage、キー <code>gakko-keisan_timer</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はタイマーの画面のボタンから。</li>
+      </ul>
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=gakko-keisan" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul>
+        <li><time datetime="2026-09-25">2026年9月25日</time> 公開</li>
+      </ul>
+    </article>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学校の計算機</a></li>
+        <li><a href="./">宿題タイマー</a></li>
+        <li><a href="./guide.html" aria-current="page">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

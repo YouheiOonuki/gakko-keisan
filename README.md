@@ -13,8 +13,10 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `/gakko-keisan/naishin/` | 内申点: 都立の換算内申（65・75 点）と調査書点、学力検査・ESAT-J を入れると総合得点（1020 点）。神奈川県（中2＋中3×2＝135 点、Ｓ１）、兵庫県（250 点、素点 500 点、第1志望加算点）。目標点から要る学力検査の点数 |
 | `/gakko-keisan/hensachi/` | 偏差値: 点数・平均・標準偏差 → 偏差値、上位の割合・順位の目安（正規分布の仮定）、全員の点数から平均・標準偏差、順位と人数から偏差値の目安、5 教科の表 |
 | `/gakko-keisan/shusseki/` | 出席日数・欠課時数: 学校の決まりの割合（3分の2・4分の3・8割・自分で入れる%）で、休める上限と残り。単位数×35、欠席に数えない回数、科目ごとの一覧 |
+| `/gakko-keisan/timer/` | 宿題タイマー（子ども向け）: 残り時間が円か棒で減る、おわったら Web Audio で合成した小さな音（消せる）、べんきょう→やすみのくり返し、Screen Wake Lock で画面を消さない。画面は AdSense の meta だけ（広告は `guide.html`） |
+| `/gakko-keisan/atonannichi/` | ○○まであと何日: 夏休み・誕生日（毎年）・期間の残り、ぬりつぶすカウントダウン表（A4 縦、日曜はじまり、366 日まで）。夏休みの日付の既定は持たない（利用者が入れる）。画面は AdSense の meta だけ。紙のクレジットの着地は `/gakko-keisan/print/`（noindex、sitemap に載せない） |
 
-入力内容はこの端末のブラウザ（`gakko-keisan_naishin`・`gakko-keisan_hensachi`・`gakko-keisan_shusseki`）にだけ保存し、外部には送信しない。書き出しファイルは `gakko-keisan-backup-YYYYMMDD.json`（`data` のキーはページ名）。
+入力内容はこの端末のブラウザ（`gakko-keisan_naishin`・`gakko-keisan_hensachi`・`gakko-keisan_shusseki`・`gakko-keisan_timer`・`gakko-keisan_atonannichi`）にだけ保存し、外部には送信しない。書き出しファイルは `gakko-keisan-backup-YYYYMMDD.json`（`data` のキーはページ名）。
 
 ## 計算の仕様・根拠
 
@@ -36,9 +38,10 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | ファイル | 役割 |
 |---------|------|
 | `index.html` | 一覧（ハブ） |
-| `naishin/`・`hensachi/`・`shusseki/` | 各計算機（`index.html` 画面、`guide.html` 使い方、`app.js` 画面の制御） |
-| `lib/naishin.js`・`lib/hensachi.js`・`lib/shusseki.js` | 計算（画面から切り離した純粋関数） |
-| `lib/naishin-values.js`・`lib/shusseki-values.js` | 時点のある値（値・出典・確認日） |
+| `naishin/`・`hensachi/`・`shusseki/`・`timer/`・`atonannichi/` | 各ページ（`index.html` 画面、`guide.html` 使い方、`app.js` 画面の制御。timer・atonannichi はページだけの CSS も） |
+| `print/` | 印刷した表のクレジットから来た人の着地ページ（noindex） |
+| `lib/naishin.js`・`lib/hensachi.js`・`lib/shusseki.js`・`lib/timer.js`・`lib/atonannichi.js` | 計算（画面から切り離した純粋関数） |
+| `lib/naishin-values.js`・`lib/shusseki-values.js`・`lib/atonannichi-values.js` | 時点のある値（値・出典・確認日） |
 | `lib/common.js` | 保存・共有リンク・バックアップファイル |
 | `lib/screen.js` | 画面の部品（上端の固定バー、`details` の `summary` の状態表示） |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応） |

@@ -1,0 +1,66 @@
+/* ○○まであと何日（atonannichi/）だけの見た目: 名前の例のボタン・一覧・カウントダウン表（A4）と見本 */
+.quick { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+.quick button {
+  min-height: 44px; padding: 0 0.8rem; border-radius: 22px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text); font: inherit; font-size: 0.92rem; cursor: pointer;
+}
+.quick button[aria-pressed="true"] { background: var(--accent); color: var(--card); border-color: var(--accent); }
+.quick button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.field input[type="date"] {
+  padding: 0.45rem 0.5rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--card); color: var(--text); min-height: 44px; min-width: 11rem;
+}
+.result-big.is-past { color: var(--text); }
+.result-big.is-long { font-size: 1.45rem; }
+
+/* ほかの日（行を足す入力） */
+.list-rows .r { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) auto 44px; }
+.list-rows .r input[type="date"] { min-width: 0; padding: 0.35rem 0.2rem; font-size: 0.95rem; }
+.list-rows .r .ry { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--muted); }
+.list-rows .r .ry input { width: 1.2rem; height: 1.2rem; margin-top: 0.5rem; accent-color: var(--accent); }
+.list-out { list-style: none; margin-top: 0.6rem; }
+.list-out li { display: flex; align-items: center; gap: 0.6rem; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 0.35rem 0; font-size: 0.92rem; }
+.list-out .days { font-weight: 700; color: var(--accent); white-space: nowrap; }
+.list-out .when { display: block; font-size: 0.78rem; color: var(--muted); }
+.list-out button { min-height: 40px; }
+
+/* ===== カウントダウン表（A4 縦）。画面では #sheet を出さず、#preview に 1 枚目を縮小して写す ===== */
+.sheet-print { display: none; }
+.page {
+  width: 210mm; height: 297mm; padding: 12mm 12mm 10mm; background: #fff; color: #222;
+  display: flex; flex-direction: column; font-family: inherit; overflow: hidden;
+}
+.page + .page { break-before: page; }
+.pg-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 6mm; margin-bottom: 4mm; }
+.pg-title { font-size: 20pt; font-weight: 700; line-height: 1.25; }
+.pg-title .big { font-size: 26pt; }
+.pg-date { font-size: 11pt; margin-top: 1mm; }
+.pg-how { font-size: 11pt; margin-top: 1mm; }
+.pg-name { font-size: 12pt; white-space: nowrap; border-bottom: 0.4mm solid #222; padding: 0 30mm 1mm 0; }
+.pg-grid { flex: 1; width: 100%; border-collapse: collapse; table-layout: fixed; }
+.pg-grid th { font-size: 11pt; font-weight: 700; padding: 1mm 0; border: 0.3mm solid #555; background: #f2f2f2; }
+.pg-grid th.sun { color: #b3261e; }
+.pg-grid th.sat { color: #1f5fa8; }
+.pg-grid td { border: 0.3mm solid #555; vertical-align: top; padding: 1mm 1.5mm; position: relative; }
+.pg-grid td.empty { background: #f7f7f7; }
+.pg-grid .md { font-size: 9pt; color: #444; }
+.pg-grid .md.first { font-weight: 700; color: #222; }
+.pg-grid .left { position: absolute; left: 0; right: 0; bottom: 1.5mm; text-align: center; line-height: 1; }
+.pg-grid .left small { display: block; font-size: 8pt; color: #555; margin-bottom: 0.8mm; }
+.pg-grid .left b { font-size: 20pt; font-weight: 700; font-variant-numeric: tabular-nums; color: #333; }
+.pg-grid td.goal { border: 0.9mm solid #222; }
+.pg-grid td.goal .left b { font-size: 16pt; }
+.pg-foot { display: flex; justify-content: space-between; font-size: 8.5pt; color: #555; margin-top: 2mm; }
+
+/* 見本: 1 枚目を幅に合わせて縮小（app.js が --s に縮尺を入れる）。ダークモードでも白のまま */
+.preview-wrap { width: 100%; max-width: 360px; margin: 0 auto 0.4rem; border: 1px solid var(--border); background: #fff; overflow: hidden; }
+.preview { width: 210mm; height: 297mm; transform: scale(var(--s, 0.4)); transform-origin: 0 0; }
+.preview .page { box-shadow: none; }
+
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  html, body { background: #fff !important; }
+  body > :not(#sheet) { display: none !important; }
+  .sheet-print { display: block !important; }
+  .page { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
