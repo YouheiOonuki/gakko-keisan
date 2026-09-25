@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>内申点の計算（都立の換算内申・神奈川・兵庫）令和9年度入試｜学校の計算機｜yorozu-craft</title>
+  <meta name="description" content="中3の通知表の評定から、都立高校の換算内申（65点満点）と調査書点（300点）を計算。学力検査とESAT-Jを入れると総合得点（1020点）も。神奈川県（中2＋中3×2、S値）・兵庫県（250点）にも対応。令和9年度（2027年春）の入試の要綱どおり、出典と確認日つき。登録不要。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/naishin/">
+
+  <meta property="og:title" content="内申点の計算（都立の換算内申・神奈川・兵庫）｜学校の計算機｜yorozu-craft">
+  <meta property="og:description" content="通知表の評定から、都立の換算内申・調査書点、神奈川のS値、兵庫の内申点を令和9年度入試の要綱どおりに計算。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/naishin/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "内申点の計算（都立の換算内申・神奈川・兵庫）",
+    "description": "通知表の評定から、都立の換算内申・調査書点、神奈川のS値、兵庫の内申点を令和9年度入試の要綱どおりに計算。",
+    "url": "https://yorozu-craft.com/gakko-keisan/naishin/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- 固定バー（SCREEN.md 1.1・D59）: 結果が出たあと、結果が画面の外にあるときだけ上端に出す -->
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <a href="#result-card"><span id="fixbar-text"></span> ▸ 結果へ</a>
+  </div>
+
+  <header class="app-header">
+    <h1>内申点の計算（都立の換算内申・神奈川・兵庫）</h1>
+    <p class="subtitle">通知表の評定から、入試で使う内申点を出します。令和9年度（2027年春）の入試の要綱どおり。</p>
+  </header>
+
+  <main class="app-main">
+
+    <p class="badge" id="asof">令和9年度入試の要綱・確認日 <span id="asof-date">2026年9月25日</span>・入力は外部に送信しません</p>
+
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req" id="req">
+        <legend>都道府県と評定</legend>
+        <div class="field">
+          <label for="pref">受ける高校の都道府県</label>
+          <select id="pref">
+            <option value="tokyo">東京都（都立高校）</option>
+            <option value="kanagawa">神奈川県（公立高校）</option>
+            <option value="hyogo">兵庫県（公立高校）</option>
+          </select>
+          <p class="hint" id="pref-hint">中3の2学期（12月31日まで）の評定を使います。</p>
+        </div>
+        <div class="field" id="g2" hidden>
+          <label for="sum2">中2の9教科の評定の合計</label>
+          <div class="row"><input type="number" id="sum2" inputmode="numeric" min="9" max="45" step="1" placeholder="例：30"><span class="unit">/ 45</span></div>
+          <p class="hint">中2の通知表（学年の評定）の9つを足した数。</p>
+        </div>
+        <fieldset class="grades" id="g3">
+          <legend id="g3-legend">中3の評定</legend>
+          <div class="grade-row" data-subj="kokugo"><span class="subj" id="g3-kokugo-l">国語<small class="mul" data-subj="kokugo"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-kokugo-l"><label><input type="radio" name="g3-kokugo" value="1"><span>1</span></label><label><input type="radio" name="g3-kokugo" value="2"><span>2</span></label><label><input type="radio" name="g3-kokugo" value="3"><span>3</span></label><label><input type="radio" name="g3-kokugo" value="4"><span>4</span></label><label><input type="radio" name="g3-kokugo" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="shakai"><span class="subj" id="g3-shakai-l">社会<small class="mul" data-subj="shakai"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-shakai-l"><label><input type="radio" name="g3-shakai" value="1"><span>1</span></label><label><input type="radio" name="g3-shakai" value="2"><span>2</span></label><label><input type="radio" name="g3-shakai" value="3"><span>3</span></label><label><input type="radio" name="g3-shakai" value="4"><span>4</span></label><label><input type="radio" name="g3-shakai" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="sugaku"><span class="subj" id="g3-sugaku-l">数学<small class="mul" data-subj="sugaku"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-sugaku-l"><label><input type="radio" name="g3-sugaku" value="1"><span>1</span></label><label><input type="radio" name="g3-sugaku" value="2"><span>2</span></label><label><input type="radio" name="g3-sugaku" value="3"><span>3</span></label><label><input type="radio" name="g3-sugaku" value="4"><span>4</span></label><label><input type="radio" name="g3-sugaku" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="rika"><span class="subj" id="g3-rika-l">理科<small class="mul" data-subj="rika"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-rika-l"><label><input type="radio" name="g3-rika" value="1"><span>1</span></label><label><input type="radio" name="g3-rika" value="2"><span>2</span></label><label><input type="radio" name="g3-rika" value="3"><span>3</span></label><label><input type="radio" name="g3-rika" value="4"><span>4</span></label><label><input type="radio" name="g3-rika" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="eigo"><span class="subj" id="g3-eigo-l">英語<small class="mul" data-subj="eigo"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-eigo-l"><label><input type="radio" name="g3-eigo" value="1"><span>1</span></label><label><input type="radio" name="g3-eigo" value="2"><span>2</span></label><label><input type="radio" name="g3-eigo" value="3"><span>3</span></label><label><input type="radio" name="g3-eigo" value="4"><span>4</span></label><label><input type="radio" name="g3-eigo" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="ongaku"><span class="subj" id="g3-ongaku-l">音楽<small class="mul" data-subj="ongaku"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-ongaku-l"><label><input type="radio" name="g3-ongaku" value="1"><span>1</span></label><label><input type="radio" name="g3-ongaku" value="2"><span>2</span></label><label><input type="radio" name="g3-ongaku" value="3"><span>3</span></label><label><input type="radio" name="g3-ongaku" value="4"><span>4</span></label><label><input type="radio" name="g3-ongaku" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="bijutsu"><span class="subj" id="g3-bijutsu-l">美術<small class="mul" data-subj="bijutsu"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-bijutsu-l"><label><input type="radio" name="g3-bijutsu" value="1"><span>1</span></label><label><input type="radio" name="g3-bijutsu" value="2"><span>2</span></label><label><input type="radio" name="g3-bijutsu" value="3"><span>3</span></label><label><input type="radio" name="g3-bijutsu" value="4"><span>4</span></label><label><input type="radio" name="g3-bijutsu" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="hotai"><span class="subj" id="g3-hotai-l">保健体育<small class="mul" data-subj="hotai"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-hotai-l"><label><input type="radio" name="g3-hotai" value="1"><span>1</span></label><label><input type="radio" name="g3-hotai" value="2"><span>2</span></label><label><input type="radio" name="g3-hotai" value="3"><span>3</span></label><label><input type="radio" name="g3-hotai" value="4"><span>4</span></label><label><input type="radio" name="g3-hotai" value="5"><span>5</span></label></span></div>
+          <div class="grade-row" data-subj="gika"><span class="subj" id="g3-gika-l">技術・家庭<small class="mul" data-subj="gika"></small></span><span class="tiles" role="radiogroup" aria-labelledby="g3-gika-l"><label><input type="radio" name="g3-gika" value="1"><span>1</span></label><label><input type="radio" name="g3-gika" value="2"><span>2</span></label><label><input type="radio" name="g3-gika" value="3"><span>3</span></label><label><input type="radio" name="g3-gika" value="4"><span>4</span></label><label><input type="radio" name="g3-gika" value="5"><span>5</span></label></span></div>
+        </fieldset>
+      </fieldset>
+
+      <section class="card result-card" id="result-card" tabindex="-1" aria-labelledby="h-result">
+        <h2 id="h-result">内申点</h2>
+        <div id="result-main" aria-live="polite">
+          <p class="result-sub" id="r-lead">換算内申（実技4教科は2倍）</p>
+          <p class="result-big" id="r-big">—</p>
+          <p class="result-sub" id="r-sub">9教科の評定を選ぶと出ます。</p>
+        </div>
+        <div class="table-wrap"><table class="steps" id="r-table"><tbody></tbody></table></div>
+        <p class="small note" id="r-note"></p>
+        <p class="small">この計算は目安です。実際の点数は各都府県の教育委員会と高校が決めます。根拠は<a href="./guide.html#basis">使い方ページ</a>に。</p>
+      </section>
+
+      <details class="card opt" id="d-exam">
+        <summary>学力検査の点数と比率: <span class="opt-state">入力なし</span></summary>
+        <div data-pref="tokyo">
+          <div class="field">
+            <label for="t-kyoka">学力検査の教科</label>
+            <select id="t-kyoka">
+              <option value="5">5教科（国数英社理。第一次募集の多く）</option>
+              <option value="3">3教科（国数英）</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="t-ratio">学力検査：調査書の比率</label>
+            <select id="t-ratio"></select>
+            <p class="hint">学校ごとの比率は要綱の別表4にあります。</p>
+          </div>
+          <div class="field">
+            <label for="t-gaku">学力検査（模試）の合計点</label>
+            <div class="row"><input type="number" id="t-gaku" inputmode="decimal" min="0" step="1" placeholder="例：350"><span class="unit" id="t-gaku-max">/ 500 点</span></div>
+          </div>
+          <div class="field">
+            <label for="t-esat">スピーキングテスト（ESAT-J）の結果</label>
+            <select id="t-esat">
+              <option value="">入れない</option>
+              <option value="A">A（20点）</option>
+              <option value="B">B（16点）</option>
+              <option value="C">C（12点）</option>
+              <option value="D">D（8点）</option>
+              <option value="E">E（4点）</option>
+              <option value="F">F（0点）</option>
+            </select>
+          </div>
+        </div>
+        <div data-pref="kanagawa" hidden>
+          <div class="field">
+            <label for="k-f">内申：学力検査の比率</label>
+            <select id="k-f"></select>
+            <p class="hint">志望校の比率は県の「選考基準」の表で確かめてください。</p>
+          </div>
+          <div class="field">
+            <label for="k-gaku">学力検査（模試）の合計点</label>
+            <div class="row"><input type="number" id="k-gaku" inputmode="decimal" min="0" step="1" placeholder="例：350">
+              <select id="k-gakuMax" aria-label="学力検査の満点"><option value="500">/ 500 点（5教科）</option><option value="300">/ 300 点（3教科）</option></select></div>
+          </div>
+        </div>
+        <div data-pref="hyogo" hidden>
+          <div class="field">
+            <label for="h-gaku">学力検査（模試）の合計点</label>
+            <div class="row"><input type="number" id="h-gaku" inputmode="decimal" min="0" step="1" placeholder="例：350"><span class="unit">/ 500 点</span></div>
+          </div>
+          <div class="field">
+            <label for="h-gakku">複数志願選抜の第1志望（学区）</label>
+            <select id="h-gakku">
+              <option value="">なし（単独選抜・第2志望）</option>
+              <option value="1">第1学区（+25点）</option>
+              <option value="2">第2学区（+20点）</option>
+              <option value="3">第3学区（+25点）</option>
+              <option value="4">第4学区（+30点）</option>
+              <option value="5">第5学区（+30点）</option>
+            </select>
+          </div>
+        </div>
+      </details>
+
+      <details class="card opt" id="d-target">
+        <summary>目標点から、要る学力検査の点数: <span class="opt-state">入力なし</span></summary>
+        <div class="field">
+          <label for="target" id="target-label">目標の得点（学力検査＋調査書、1000点満点）</label>
+          <div class="row"><input type="number" id="target" inputmode="decimal" min="0" step="1" placeholder="例：800"><span class="unit">点</span></div>
+          <p class="hint">塾や模試の「合格の目安」の点数を入れます。</p>
+        </div>
+        <p class="result-sub" id="need" aria-live="polite"></p>
+      </details>
+
+      <details class="card opt">
+        <summary>このツールで計算しないこと</summary>
+        <ul class="small">
+          <li>推薦入試（東京都は観点別の評価を使う学校もある）、面接・作文・実技検査の点、傾斜配点、神奈川県の重点化・特色検査・第2次選考。</li>
+          <li>ほかの道府県。要綱は <span id="others"></span> など、各教育委員会のページにあります。</li>
+        </ul>
+      </details>
+
+      <details class="card opt no-print" id="d-file">
+        <summary>入力の保存・書き出し</summary>
+        <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakko-keisan_naishin</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
+          <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
+          <button type="button" class="btn btn-sub" id="clear">入力を消す</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
+        <p class="small" id="file-msg" role="status"></p>
+      </details>
+
+      <p class="small"><a href="./guide.html">使い方・根拠・よくある質問（換算内申の出し方・実技2倍・ESAT-J）</a></p>
+    </form>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学校の計算機</a></li>
+        <li><a href="./" aria-current="page">内申点の計算</a></li>
+        <li><a href="../hensachi/">偏差値の計算</a></li>
+        <li><a href="../shusseki/">出席日数の計算</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../lib/naishin-values.js"></script>
+  <script src="../lib/naishin.js"></script>
+  <script src="../lib/common.js"></script>
+  <script src="../lib/screen.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

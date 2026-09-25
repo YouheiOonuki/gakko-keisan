@@ -2,11 +2,11 @@
 // README「ツールを追加するとき」20（決定 D31）
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { backupFileName, buildBackup, parseBackup } = require('../calc.js');
+const { backupFileName, buildBackup, parseBackup } = require('../lib/common.js');
 
-const TOOL = '__REPO__';
-const DATA = { draft: { amount: '1234' } };
-const REQUIRED = ['draft'];
+const TOOL = 'gakko-keisan';
+const DATA = { naishin: { pref: 'tokyo' } };
+const REQUIRED = ['naishin'];
 
 test('backupFileName: <ツール名>-backup-YYYYMMDD.json（端末の日付）', () => {
   assert.equal(backupFileName(TOOL, new Date(2026, 8, 24, 23, 59)), TOOL + '-backup-20260924.json');

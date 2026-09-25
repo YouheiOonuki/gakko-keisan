@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>__TITLE__｜yorozu-craft</title>
-  <meta name="description" content="__DESCRIPTION__">
+  <title>学校の計算機（内申点・偏差値・出席日数）｜yorozu-craft</title>
+  <meta name="description" content="都立の換算内申・神奈川・兵庫の内申点、テストの偏差値と順位の目安、高校の出席日数（あと何回休めるか）の計算。入試の要綱や文部科学省の資料を確かめて作り、出典と確認日つき。登録不要・無料で、入力はブラウザの外に送信しません。">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://yorozu-craft.com/__REPO__/">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/">
 
-  <meta property="og:title" content="__TITLE__｜yorozu-craft">
-  <meta property="og:description" content="__DESCRIPTION__">
+  <meta property="og:title" content="学校の計算機（内申点・偏差値・出席日数）｜yorozu-craft">
+  <meta property="og:description" content="都立の換算内申・神奈川・兵庫の内申点、偏差値と順位の目安、高校の出席日数（あと何回休めるか）の計算。出典と確認日つき。">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yorozu-craft.com/__REPO__/">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/">
   <meta property="og:site_name" content="yorozu-craft">
   <meta property="og:locale" content="ja_JP">
-  <meta property="og:image" content="https://yorozu-craft.com/__REPO__/og-image.png">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
@@ -25,103 +25,67 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "__TITLE__",
-    "description": "__DESCRIPTION__",
-    "url": "https://yorozu-craft.com/__REPO__/",
-    "applicationCategory": "UtilitiesApplication",
+    "name": "学校の計算機",
+    "description": "都立の換算内申・神奈川・兵庫の内申点、偏差値と順位の目安、高校の出席日数（あと何回休めるか）の計算。出典と確認日つき。",
+    "url": "https://yorozu-craft.com/gakko-keisan/",
+    "applicationCategory": "EducationalApplication",
     "operatingSystem": "All",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
     "inLanguage": "ja"
   }
   </script>
 
-  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト）。全画面で操作する画面なら script を消して meta だけ残す -->
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
   <meta name="google-adsense-account" content="ca-pub-5375267956079717">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
      crossorigin="anonymous"></script>
 
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-  <!-- PWA-BEGIN -->
-  <link rel="manifest" href="./manifest.webmanifest">
-  <!-- PWA-END -->
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-  <!-- 上端の固定バー（SCREEN.md 1.1・D59）。結果が出て、結果が画面の外にあるときだけ screen.js が出す。読み込み時は hidden のまま。
-       2 カラム（下の layout-2col）にするなら class に fixbar-narrow も足す（PC では出さない）。
-       印刷物（設定 → 出力）なら中身を <button type="button">印刷する</button> にし、main.js で onClick を渡す -->
-  <div class="fixbar" id="fixbar" role="status" hidden>
-    <a href="#result-card"><span id="fixbar-text"></span> ▸ 結果へ</a>
-  </div>
-
   <header class="app-header">
-    <h1>__TITLE__</h1>
-    <!-- 冒頭は制度 2 文・60 字、道具 1 文・40 字（WRITING.md 1 章）。時点と「外部に送信しない」をここに -->
-    <p class="subtitle">__DESCRIPTION__ 入力は外部に送信しません。</p>
+    <h1>学校の計算機</h1>
+    <p class="subtitle">内申点・偏差値・出席日数を、入試の要綱や文部科学省の資料どおりに計算します。</p>
   </header>
 
-  <!-- 画面の骨組み「入力 → 結果」（yorozu-plans の docs/SCREEN.md 1.1。README「ツールを追加するとき」25）。
-       順番は 1 必須の入力 → 2 結果 → 3 くわしく入れる → 4 保存・書き出し → 5 使い方へのリンク。1 と 2 の間に段落・見出しを挟まない。
-       制度の計算機で PC を 2 カラムにするなら class に layout-2col を足す -->
   <main class="app-main">
-    <form id="form" autocomplete="off" onsubmit="return false">
 
-      <!-- 1 必須の入力: 空だと結果が出ない項目だけ（制度 6・道具 3・印刷物 4 まで）。h2 は付けず legend。数値の既定は空欄＋ placeholder -->
-      <fieldset class="card req">
-        <legend>金額</legend>
-        <div class="field">
-          <label for="amount">金額（円）</label>
-          <input type="number" id="amount" inputmode="numeric" placeholder="例：1234">
-        </div>
-      </fieldset>
+    <section class="card" aria-labelledby="h-list">
+      <h2 id="h-list">計算機の一覧</h2>
+      <ul class="calc-list">
+        <li>
+          <a href="./naishin/">
+            <span class="name">内申点の計算（都立の換算内申・神奈川・兵庫）</span>
+            <span class="desc">通知表の評定から、都立高校の換算内申（65点満点）と調査書点、神奈川県の内申点（135点）とS値、兵庫県の内申点（250点）を計算。学力検査とESAT-Jを入れると総合得点も。令和9年度（2027年春）の入試の要綱どおり。</span>
+          </a>
+        </li>
+        <li>
+          <a href="./hensachi/">
+            <span class="name">偏差値の計算（順位の目安・5教科）</span>
+            <span class="desc">点数・平均点・標準偏差から偏差値。人数を入れると順位の目安、順位と人数から偏差値の目安も。標準偏差がわからないときは全員の点数から計算します。</span>
+          </a>
+        </li>
+        <li>
+          <a href="./shusseki/">
+            <span class="name">出席日数・欠課時数の計算（あと何回休めるか）</span>
+            <span class="desc">高校の授業の回数（単位数×35）と休んだ回数から、単位を落とさずに休める残りの回数を科目ごとに。3分の2・4分の3・8割は学校ごとの決まりなので、選んで計算します。</span>
+          </a>
+        </li>
+      </ul>
+    </section>
 
-      <!-- 2 結果: 大きな数字 1 つ＋ 1 行（aria-live）。内訳は details.rels。下に免責 1 文と、ほかのツールへの導線 1〜2 行（README 21） -->
-      <section class="card result-card" id="result-card" tabindex="-1" aria-labelledby="h-result">
-        <h2 id="h-result">結果</h2>
-        <div id="result-main" aria-live="polite">
-          <p class="result-big" id="result">—</p>
-          <p class="result-sub" id="result-sub">金額を入れると出ます。</p>
-        </div>
-        <details class="rels">
-          <summary>内訳と途中の計算</summary>
-          <p class="small" id="result-detail">—</p>
-        </details>
-        <p class="small">この計算は目安です。</p>
-      </section>
-
-      <!-- 3 くわしく入れる: 一部の人だけの項目。グループごとに 1 つの details。summary の .opt-state に今の状態（main.js の detailsSummary）。
-           開いた状態は保存しない。道具で任意の項目が無ければ、この節ごと消す -->
-      <div class="opts">
-        <details class="card opt" id="opt-unit">
-          <summary>端数の単位: <span class="opt-state">100 円</span></summary>
-          <div class="field">
-            <label for="unit">切り上げる単位</label>
-            <select id="unit">
-              <option value="100" selected>100 円</option>
-              <option value="1000">1,000 円</option>
-            </select>
-          </div>
-        </details>
-      </div>
-    </form>
-
-    <!-- 4 保存・書き出し（README「ツールを追加するとき」20。定型 2 文＋ボタン） -->
-    <details class="card opt no-print" id="file-box">
-      <summary>入力の保存・書き出し</summary>
-      <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>__REPO___draft</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
-      <div class="btn-row">
-        <button type="button" id="share" class="btn">結果を開くリンクをコピー</button>
-        <button type="button" id="backup-export" class="btn">ファイルに書き出す</button>
-        <button type="button" id="backup-import" class="btn">ファイルから読み込む</button>
-      </div>
-      <input type="file" id="backup-file" accept=".json,application/json" hidden>
-      <p id="backup-msg" class="small" aria-live="polite"></p>
-    </details>
-
-    <!-- 5 使い方へのリンク（1 行） -->
-    <p class="small"><a href="./guide.html">使い方・根拠・よくある質問</a></p>
+    <section class="card content" aria-labelledby="h-policy">
+      <h2 id="h-policy">この計算機の決まりごと</h2>
+      <ul>
+        <li><strong>公式の資料どおりに計算</strong>：入試の点数は各都府県の教育委員会の要綱、単位の数え方は文部科学省の学習指導要領を読んで作り、出典と確認日を出します。</li>
+        <li><strong>毎年更新</strong>：次の年度の要綱が出たら値を見直し、確認日を更新します。</li>
+        <li><strong>入力は外部に送信しない</strong>：成績を入れても、この端末のブラウザの中だけで計算します。</li>
+        <li><strong>結果は目安</strong>：合否や単位の認定は高校が決めます。</li>
+      </ul>
+    </section>
 
   </main>
 
@@ -129,8 +93,10 @@
     <nav class="footer-nav" aria-label="フッターナビゲーション">
       <ul>
         <li><a href="../">yorozu-craft トップ</a></li>
-        <li><a href="./" aria-current="page">__TITLE__</a></li>
-        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="./" aria-current="page">学校の計算機</a></li>
+        <li><a href="./naishin/">内申点の計算</a></li>
+        <li><a href="./hensachi/">偏差値の計算</a></li>
+        <li><a href="./shusseki/">出席日数の計算</a></li>
         <li><a href="../about.html">運営者情報</a></li>
         <li><a href="../privacy-policy.html">プライバシーポリシー</a></li>
       </ul>
@@ -138,10 +104,6 @@
     <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
   </footer>
 
-  <script src="./constants.js"></script>
-  <script src="./screen.js"></script>
-  <script src="./calc.js"></script>
-  <script src="./main.js"></script>
   <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
