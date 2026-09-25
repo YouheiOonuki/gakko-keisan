@@ -1,5 +1,5 @@
 /* ===========================
-   __TITLE__ — yorozu-craft 共通の和紙風の配色
+   学校の計算機（gakko-keisan）— yorozu-craft 共通の和紙風の配色
    色はトークン（--bg / --card / --text / --muted / --accent / --border）だけを使う。
    ダークモードは端末の設定に自動で合わせる（prefers-color-scheme。手動切替は付けない）
    =========================== */
@@ -190,6 +190,68 @@ details > summary:focus-visible { outline: 2px solid var(--accent); outline-offs
   .layout-2col > form { display: contents; }
   .layout-2col .result-card { grid-column: 2; grid-row: 1 / span 30; position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; }
 }
+
+/* ===========================
+   学校の計算機で共通の部品（ハブの一覧・確認日の帯・表・評定のタイル・行を足す入力）
+   =========================== */
+.badge { text-align: center; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.8rem; }
+.badge.is-stale { color: var(--accent); font-weight: 700; }
+.calc-list { list-style: none; display: grid; gap: 0.8rem; }
+.calc-list a { display: block; text-decoration: none; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; background: var(--accent-soft); }
+.calc-list a:hover, .calc-list a:focus-visible { border-color: var(--accent); }
+.calc-list .name { display: block; font-weight: 700; color: var(--accent); font-size: 1.02rem; }
+.calc-list .desc { display: block; font-size: 0.86rem; color: var(--muted); margin-top: 0.2rem; }
+
+.steps { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.steps th, .steps td { border-bottom: 1px solid var(--border); padding: 0.4rem 0.3rem; vertical-align: top; text-align: left; }
+.steps td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.steps th { font-weight: 600; }
+.steps tr.total th, .steps tr.total td { font-weight: 700; color: var(--accent); }
+.steps .rule { display: block; font-size: 0.74rem; color: var(--muted); font-weight: normal; }
+.table-wrap { overflow-x: auto; margin: 0.4rem 0; }
+.result-card .note:empty { display: none; }
+.result-big.is-over { color: var(--text); }
+
+.field .row { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.field .row input[type="number"] { max-width: 9rem; text-align: right; }
+.field .unit { font-size: 0.9rem; }
+.field.is-missing input, .field.is-missing select { border-color: var(--accent); background: var(--accent-soft); }
+label.inline { display: flex; align-items: center; gap: 0.5rem; font-weight: normal; font-size: 0.93rem; min-height: 44px; }
+label.inline input { width: 1.15rem; height: 1.15rem; accent-color: var(--accent); flex: none; }
+textarea { width: 100%; font: inherit; font-size: 1rem; padding: 0.45rem 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--text); }
+.btn-sub { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--border); }
+
+/* 評定のタイル（教科ごとに 1〜5 を 1 タップで選ぶ）。入れ子の fieldset は選択肢だけなので measure_fold は 1 つと数える */
+fieldset.grades { border: none; min-width: 0; margin: 0 0 0.6rem; }
+fieldset.grades .hint { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+fieldset.grades > legend { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+.grade-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.15rem 0; }
+.grade-row + .grade-row { border-top: 1px dashed var(--border); }
+.grade-row .subj { flex: 0 0 5.2em; font-size: 0.92rem; }
+.grade-row .subj small { display: block; font-size: 0.7rem; color: var(--muted); line-height: 1.2; }
+.tiles { display: flex; gap: 0.3rem; }
+.tiles label { position: relative; }
+.tiles input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tiles span {
+  display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px;
+  border: 1px solid var(--border); border-radius: 6px; background: var(--card); font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer;
+}
+.tiles input:checked + span { background: var(--accent); color: var(--card); border-color: var(--accent); }
+.tiles input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.grades.is-missing .grade-row.is-empty .subj { color: var(--accent); font-weight: 700; }
+@media (max-width: 360px) { .tiles span { width: 40px; } .grade-row .subj { flex-basis: 4.4em; } }
+
+/* 行を足す入力（科目の一覧） */
+.rows { display: grid; gap: 0.5rem; margin: 0.4rem 0; }
+.rows .r { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) 44px; gap: 0.3rem; align-items: end; }
+.rows .r label { font-size: 0.72rem; color: var(--muted); display: block; }
+.rows .r input { width: 100%; padding: 0.4rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--text); }
+.rows .r button { height: 42px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--muted); cursor: pointer; }
+
+.content .steps td { white-space: normal; text-align: left; }
+.five th, .five td { text-align: center; padding: 0.3rem 0.15rem; }
+.five input { width: 4.2em; padding: 0.35rem 0.2rem; font-size: 1rem; text-align: right; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--text); }
+.five td:last-child { font-weight: 700; color: var(--accent); }
 
 @media print {
   .fixbar, .no-print { display: none !important; }

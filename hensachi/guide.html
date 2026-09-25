@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>偏差値の求め方・順位の目安の使い方｜学校の計算機｜yorozu-craft</title>
+  <meta name="description" content="偏差値の求め方（50＋10×(点数−平均点)÷標準偏差）、標準偏差がわからないときの出し方、人数から順位の目安を出すときの前提（正規分布）を説明します。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/hensachi/guide.html">
+
+  <meta property="og:title" content="偏差値の求め方・順位の目安の使い方｜学校の計算機">
+  <meta property="og:description" content="偏差値の式、標準偏差がないときの出し方、順位の目安の前提。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/hensachi/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "標準偏差がわからないと偏差値は計算できませんか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "点数と平均点だけでは計算できません。全員の点数がわかれば平均と標準偏差を出せます。順位と人数だけがわかるときは、正規分布を仮定した偏差値の目安を出します。" }
+      },
+      {
+        "@type": "Question",
+        "name": "偏差値60は上位何%ですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "点数が正規分布に従うと仮定すると約15.9%で、偏差値70は約2.3%です。実際のテストの分布によってずれます。" }
+      },
+      {
+        "@type": "Question",
+        "name": "5教科の偏差値は教科ごとの偏差値の平均ですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "一致しません。5教科の合計の偏差値は、合計点・合計の平均・合計の標準偏差から出します。" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>偏差値の計算の使い方</h1>
+    <p class="subtitle">偏差値の求め方・順位の目安の前提・よくある質問</p>
+  </header>
+
+  <main class="app-main">
+
+    <p class="card" style="text-align:center"><a href="./">▶ 偏差値を計算する</a></p>
+
+    <article class="card content" id="howto">
+      <h2>使い方</h2>
+      <ol>
+        <li>自分の点数・平均点・標準偏差を入れます。</li>
+        <li>偏差値と、上位の割合の目安が出ます。</li>
+        <li>受けた人数を入れると、順位の目安が出ます。</li>
+        <li>標準偏差がないときは、全員の点数か順位から出します。</li>
+      </ol>
+    </article>
+
+    <article class="card content" id="formula">
+      <h2>偏差値の求め方</h2>
+      <p>偏差値＝50＋10×（点数−平均点）÷標準偏差。平均点ちょうどなら50、平均より標準偏差1つぶん上なら60です。</p>
+      <p>例: 点数72・平均58・標準偏差15なら、50＋10×14÷15＝59.3。</p>
+      <details>
+        <summary>全員の点数から出す標準偏差</summary>
+        <p>全員の点数を貼り付けると、平均と標準偏差（全員を母集団とみなし、人数で割る）を出し、その一覧の中での実際の順位も出します。人数−1で割る標準偏差（標本）とは少し違います。</p>
+      </details>
+    </article>
+
+    <article class="card content" id="rank">
+      <h2>順位の目安の前提（正規分布）</h2>
+      <p>順位と上位の割合は、点数が平均を山にした左右対称の分布（正規分布）に従うと仮定した目安です。実際のテストは満点近くに人が集まったり、山が2つあったりして、目安とずれます。人数が少ないほど、ずれは大きくなります。</p>
+      <details>
+        <summary>計算のしかた</summary>
+        <ul>
+          <li>順位の目安: 偏差値より上にいる割合×人数（切り捨て）＋1位。</li>
+          <li>順位から偏差値: N人中r位の人は上から（r−0.5）÷Nの位置とみなし、正規分布の表で偏差値に直します。</li>
+        </ul>
+      </details>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq">
+        <dt>標準偏差がわからないと偏差値は計算できませんか？</dt>
+        <dd>点数と平均点だけでは計算できません。全員の点数がわかれば平均と標準偏差を出せます。順位と人数だけがわかるときは、正規分布を仮定した偏差値の目安を出します。</dd>
+        <dt>偏差値60は上位何%ですか？</dt>
+        <dd>点数が正規分布に従うと仮定すると約15.9%で、偏差値70は約2.3%です。実際のテストの分布によってずれます。</dd>
+        <dt>5教科の偏差値は教科ごとの偏差値の平均ですか？</dt>
+        <dd>一致しません。5教科の合計の偏差値は、合計点・合計の平均・合計の標準偏差から出します。</dd>
+      </dl>
+    </article>
+
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul>
+        <li><strong>結果の扱い</strong>：この計算は目安です。模試の偏差値は、その模試を受けた人の中での位置です。</li>
+        <li><strong>保存されるデータ</strong>：入力内容はこの端末のブラウザ（localStorage、キー <code>gakko-keisan_hensachi</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去は計算の画面のボタンから。</li>
+      </ul>
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=gakko-keisan" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul>
+        <li><time datetime="2026-09-25">2026年9月25日</time> 公開</li>
+      </ul>
+    </article>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学校の計算機</a></li>
+        <li><a href="./">偏差値の計算</a></li>
+        <li><a href="./guide.html" aria-current="page">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>出席日数・欠課時数の計算（高校 あと何回休めるか。3分の2・8割）｜学校の計算機｜yorozu-craft</title>
+  <meta name="description" content="高校の授業の回数（単位数×35）と休んだ回数から、単位を落とさずにあと何回休めるかを計算。出席の割合は3分の2・4分の3・8割・自分で入れる%から学校の決まりに合わせて選べます。科目ごとの一覧、出席停止・忌引の扱いにも対応。登録不要。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/shusseki/">
+
+  <meta property="og:title" content="出席日数・欠課時数の計算（あと何回休めるか）｜学校の計算機｜yorozu-craft">
+  <meta property="og:description" content="授業の回数と休んだ回数から、あと何回休めるかを科目ごとに。3分の2・4分の3・8割から学校の決まりに合わせて選べます。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/shusseki/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "出席日数・欠課時数の計算（あと何回休めるか）",
+    "description": "授業の回数と休んだ回数から、あと何回休めるかを科目ごとに。3分の2・4分の3・8割から学校の決まりに合わせて選べます。",
+    "url": "https://yorozu-craft.com/gakko-keisan/shusseki/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <a href="#result-card"><span id="fixbar-text"></span> ▸ 結果へ</a>
+  </div>
+
+  <header class="app-header">
+    <h1>出席日数・欠課時数の計算（あと何回休めるか）</h1>
+    <p class="subtitle">単位を落とさずに休める残りの回数を出します。入力は外部に送信しません。</p>
+  </header>
+
+  <main class="app-main">
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>授業と休んだ回数</legend>
+        <fieldset class="grades" id="ratio-box">
+          <legend>学校の決まり: 出席が必要な割合</legend>
+          <label class="inline"><input type="radio" name="ratio" value="2/3"> 3分の2以上（欠課が3分の1を超えない）</label>
+          <label class="inline"><input type="radio" name="ratio" value="3/4"> 4分の3以上</label>
+          <label class="inline"><input type="radio" name="ratio" value="4/5"> 8割以上（5分の4）</label>
+          <label class="inline"><input type="radio" name="ratio" value="custom"> ほかの割合</label>
+          <div class="row" id="custom-row" hidden><input type="number" id="custom" inputmode="decimal" min="1" max="99" step="0.1" placeholder="例：70" aria-label="出席が必要な割合（%）"><span class="unit">% 以上</span></div>
+          <p class="hint">法令の決まりではなく学校ごとの決まりです。生徒手帳などで確かめてください。</p>
+        </fieldset>
+        <div class="field">
+          <label for="total">1年間の授業の回数（その科目）</label>
+          <div class="row"><input type="number" id="total" inputmode="numeric" min="1" step="1" placeholder="例：70"><span class="unit">回</span></div>
+          <p class="hint">単位数×35が標準（2単位なら70回）。日数で数えるなら授業日数。</p>
+        </div>
+        <div class="field">
+          <label for="absent">休んだ回数（欠課時数）</label>
+          <div class="row"><input type="number" id="absent" inputmode="numeric" min="0" step="1" placeholder="例：10"><span class="unit">回</span></div>
+        </div>
+      </fieldset>
+
+      <section class="card result-card" id="result-card" tabindex="-1" aria-labelledby="h-result">
+        <h2 id="h-result">あと休める回数</h2>
+        <div id="result-main" aria-live="polite">
+          <p class="result-big" id="r-big">—</p>
+          <p class="result-sub" id="r-sub">割合と授業の回数を入れると出ます。</p>
+        </div>
+        <div class="table-wrap"><table class="steps" id="r-table"><tbody></tbody></table></div>
+        <p class="small">この計算は目安です。単位の認定は学校（校長）が決めます。遅刻・早退の数え方も学校ごとです。<a href="./guide.html#basis">根拠</a></p>
+      </section>
+
+      <details class="card opt" id="d-units">
+        <summary>単位数から授業の回数を出す: <span class="opt-state">入力なし</span></summary>
+        <div class="field">
+          <label for="units">単位数</label>
+          <div class="row"><input type="number" id="units" inputmode="decimal" min="0" step="1" placeholder="例：2"><span class="unit">単位</span></div>
+        </div>
+        <p class="result-sub" id="units-out"></p>
+        <div class="btn-row"><button type="button" class="btn btn-sub" id="units-use" disabled>この回数を上に入れる</button></div>
+      </details>
+
+      <details class="card opt" id="d-excused">
+        <summary>欠席に数えない回数: <span class="opt-state">0 回</span></summary>
+        <div class="field">
+          <label for="excused">出席停止・忌引などの回数</label>
+          <div class="row"><input type="number" id="excused" inputmode="numeric" min="0" step="1" placeholder="例：3"><span class="unit">回</span></div>
+          <p class="hint">感染症の出席停止・忌引など。授業の回数から引きます。</p>
+        </div>
+      </details>
+
+      <details class="card opt" id="d-list">
+        <summary>科目ごとの一覧: <span class="opt-state">入力なし</span></summary>
+        <p class="small">上で選んだ割合で、科目ごとの残りを少ない順に出します。回数を空にすると単位数×35で数えます。</p>
+        <div class="rows" id="rows"></div>
+        <div class="btn-row"><button type="button" class="btn btn-sub" id="add-row">＋ 科目を足す</button></div>
+        <div class="table-wrap"><table class="steps" id="list-table"><tbody></tbody></table></div>
+      </details>
+
+      <details class="card opt no-print" id="d-file">
+        <summary>入力の保存・書き出し</summary>
+        <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakko-keisan_shusseki</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
+          <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
+          <button type="button" class="btn btn-sub" id="clear">入力を消す</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
+        <p class="small" id="file-msg" role="status"></p>
+      </details>
+
+      <p class="small"><a href="./guide.html">使い方・根拠・よくある質問（3分の2は法律で決まっている？）</a></p>
+    </form>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学校の計算機</a></li>
+        <li><a href="../naishin/">内申点の計算</a></li>
+        <li><a href="../hensachi/">偏差値の計算</a></li>
+        <li><a href="./" aria-current="page">出席日数の計算</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../lib/shusseki-values.js"></script>
+  <script src="../lib/shusseki.js"></script>
+  <script src="../lib/common.js"></script>
+  <script src="../lib/screen.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

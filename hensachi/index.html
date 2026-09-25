@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>偏差値の計算（点数・平均点・標準偏差から。順位の目安・5教科）｜学校の計算機｜yorozu-craft</title>
+  <meta name="description" content="テストの点数・平均点・標準偏差から偏差値を計算。人数を入れると順位の目安、順位と人数から偏差値の目安も。標準偏差がわからないときは全員の点数を貼り付けて計算。5教科まとめて。登録不要で、入力はブラウザの外に送信しません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/hensachi/">
+
+  <meta property="og:title" content="偏差値の計算（順位の目安・5教科）｜学校の計算機｜yorozu-craft">
+  <meta property="og:description" content="点数・平均点・標準偏差から偏差値。人数から順位の目安、順位から偏差値の目安も。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/hensachi/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "偏差値の計算（順位の目安・5教科）",
+    "description": "点数・平均点・標準偏差から偏差値。人数から順位の目安、順位から偏差値の目安も。",
+    "url": "https://yorozu-craft.com/gakko-keisan/hensachi/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <div class="fixbar" id="fixbar" role="status" hidden>
+    <a href="#result-card"><span id="fixbar-text"></span> ▸ 結果へ</a>
+  </div>
+
+  <header class="app-header">
+    <h1>偏差値の計算（順位の目安・5教科）</h1>
+    <p class="subtitle">点数・平均点・標準偏差から偏差値を出します。入力は外部に送信しません。</p>
+  </header>
+
+  <main class="app-main">
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>テストの点数</legend>
+        <div class="field">
+          <label for="score">自分の点数</label>
+          <div class="row"><input type="number" id="score" inputmode="decimal" step="any" placeholder="例：72"><span class="unit">点</span></div>
+        </div>
+        <div class="field">
+          <label for="mean">平均点</label>
+          <div class="row"><input type="number" id="mean" inputmode="decimal" step="any" placeholder="例：58"><span class="unit">点</span></div>
+        </div>
+        <div class="field">
+          <label for="sd">標準偏差</label>
+          <div class="row"><input type="number" id="sd" inputmode="decimal" step="any" min="0" placeholder="例：15"><span class="unit">点</span></div>
+          <p class="hint">わからないときは結果の下の「全員の点数から」へ。</p>
+        </div>
+      </fieldset>
+
+      <section class="card result-card" id="result-card" tabindex="-1" aria-labelledby="h-result">
+        <h2 id="h-result">偏差値</h2>
+        <div id="result-main" aria-live="polite">
+          <p class="result-big" id="r-big">—</p>
+          <p class="result-sub" id="r-sub">3つを入れると出ます。</p>
+        </div>
+        <div class="table-wrap"><table class="steps" id="r-table"><tbody></tbody></table></div>
+        <p class="small">順位と上位の割合は、点数が正規分布（平均を山にした左右対称の形）だと仮定した目安です。実際のテストでは、特に人数が少ないとずれます。<a href="./guide.html#rank">くわしく</a></p>
+      </section>
+
+      <details class="card opt" id="d-n">
+        <summary>受けた人数（順位の目安）: <span class="opt-state">入力なし</span></summary>
+        <div class="field">
+          <label for="n">受けた人数</label>
+          <div class="row"><input type="number" id="n" inputmode="numeric" min="1" step="1" placeholder="例：160"><span class="unit">人</span></div>
+        </div>
+      </details>
+
+      <details class="card opt" id="d-list">
+        <summary>全員の点数から平均・標準偏差を出す: <span class="opt-state">入力なし</span></summary>
+        <div class="field">
+          <label for="list">全員の点数（改行・空白・カンマで区切る）</label>
+          <textarea id="list" rows="4" placeholder="例：72 65 80 45 58 …"></textarea>
+        </div>
+        <p class="result-sub" id="list-out" aria-live="polite"></p>
+        <div class="btn-row"><button type="button" class="btn btn-sub" id="list-use" disabled>この平均と標準偏差を上に入れる</button></div>
+      </details>
+
+      <details class="card opt" id="d-rank">
+        <summary>順位と人数から偏差値の目安: <span class="opt-state">入力なし</span></summary>
+        <p class="small">定期テストで標準偏差が出ないときに。</p>
+        <div class="field">
+          <label for="rk">順位</label>
+          <div class="row"><input type="number" id="rk" inputmode="numeric" min="1" step="1" placeholder="例：12"><span class="unit">位</span></div>
+        </div>
+        <div class="field">
+          <label for="rn">人数</label>
+          <div class="row"><input type="number" id="rn" inputmode="numeric" min="1" step="1" placeholder="例：160"><span class="unit">人</span></div>
+        </div>
+        <p class="result-sub" id="rank-out" aria-live="polite"></p>
+      </details>
+
+      <details class="card opt" id="d-5">
+        <summary>5教科をまとめて: <span class="opt-state">入力なし</span></summary>
+        <p class="small">教科ごとの偏差値を出します。5教科の合計の偏差値は、合計点・合計の平均・合計の標準偏差を上の3つの欄に入れて出してください（教科ごとの標準偏差からは出せません）。</p>
+        <div class="table-wrap">
+          <table class="steps five" id="five">
+            <thead><tr><th>教科</th><th>点数</th><th>平均</th><th>標準偏差</th><th>偏差値</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card opt no-print" id="d-file">
+        <summary>入力の保存・書き出し</summary>
+        <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakko-keisan_hensachi</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
+          <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
+          <button type="button" class="btn btn-sub" id="clear">入力を消す</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
+        <p class="small" id="file-msg" role="status"></p>
+      </details>
+
+      <p class="small"><a href="./guide.html">使い方・計算式・よくある質問（標準偏差がないとき・順位）</a></p>
+    </form>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学校の計算機</a></li>
+        <li><a href="../naishin/">内申点の計算</a></li>
+        <li><a href="./" aria-current="page">偏差値の計算</a></li>
+        <li><a href="../shusseki/">出席日数の計算</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../lib/hensachi.js"></script>
+  <script src="../lib/common.js"></script>
+  <script src="../lib/screen.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
