@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宿題タイマー（子ども向け・残り時間が円で見える）｜学校の計算機｜yorozu-craft</title>
+  <meta name="description" content="子どもの宿題・勉強用のタイマー。残り時間が円か棒で減っていき、終わったらやさしい音で知らせます（音量は小さめ、消せます）。25分＋5分のようなくり返し、画面を消さない設定つき。登録不要・無料。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/timer/">
+
+  <meta property="og:title" content="宿題タイマー（残り時間が円で見える）｜学校の計算機｜yorozu-craft">
+  <meta property="og:description" content="残り時間が円か棒で減っていく、子ども向けの宿題タイマー。終わったらやさしい音。くり返し・画面を消さない設定つき。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/timer/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "宿題タイマー",
+    "description": "残り時間が円か棒で減っていく、子ども向けの宿題タイマー。終わったらやさしい音。くり返し・画面を消さない設定つき。",
+    "url": "https://yorozu-craft.com/gakko-keisan/timer/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- Google AdSense: 子どもが使う画面なので所有確認の meta だけ（広告は保護者向けの使い方ページに出す。README の決定 D18 と同じ） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./timer.css">
+</head>
+<body>
+
+  <header class="app-header t-header">
+    <h1>宿題タイマー</h1>
+    <p class="subtitle">のこりの時間が へっていくのが見えます。</p>
+  </header>
+
+  <main class="app-main t-main" id="t-main">
+
+    <fieldset class="t-presets" id="presets">
+      <legend>なんぷん？（分）</legend>
+      <div class="chips" id="chips"></div>
+      <div class="t-adjust">
+        <button type="button" class="btn btn-sub t-step" id="minus" aria-label="1分へらす">−1</button>
+        <span class="t-min" id="t-min" aria-live="polite">15分</span>
+        <button type="button" class="btn btn-sub t-step" id="plus" aria-label="1分ふやす">＋1</button>
+      </div>
+    </fieldset>
+
+    <section class="t-stage" id="stage" aria-label="タイマー">
+      <p class="t-what" id="t-what"></p>
+      <div class="dial" id="dial">
+        <svg viewBox="0 0 200 200" aria-hidden="true" class="dial-svg" id="dial-svg">
+          <circle cx="100" cy="100" r="96" class="dial-bg"></circle>
+          <path id="pie" class="pie" d=""></path>
+          <circle cx="100" cy="100" r="46" class="dial-hole"></circle>
+        </svg>
+        <div class="bar" id="bar" hidden><div class="bar-fill" id="bar-fill"></div></div>
+        <p class="t-time" id="t-time" role="timer" aria-live="off">15:00</p>
+      </div>
+      <p class="t-phase" id="t-phase"></p>
+      <div class="btn-row t-ctrl">
+        <button type="button" class="btn t-start" id="start">スタート</button>
+        <button type="button" class="btn btn-sub" id="reset">リセット</button>
+      </div>
+      <p class="t-status" id="t-status" role="status"></p>
+    </section>
+
+    <details class="card opt" id="d-set">
+      <summary>せってい: <span class="opt-state">音 ちいさめ</span></summary>
+      <div class="field">
+        <label for="label">なにをする？（画面に出ます）</label>
+        <input type="text" id="label" maxlength="20" placeholder="例：かんじドリル">
+      </div>
+      <fieldset class="grades">
+        <legend>見た目</legend>
+        <div class="opts">
+          <label class="inline"><input type="radio" name="shape" value="circle"> 円がへる</label>
+          <label class="inline"><input type="radio" name="shape" value="bar"> 棒がへる</label>
+        </div>
+      </fieldset>
+      <fieldset class="grades">
+        <legend>おわりの音</legend>
+        <div class="opts">
+          <label class="inline"><input type="radio" name="volume" value="off"> 鳴らさない</label>
+          <label class="inline"><input type="radio" name="volume" value="low"> ちいさめ</label>
+          <label class="inline"><input type="radio" name="volume" value="mid"> ふつう</label>
+          <label class="inline"><input type="radio" name="volume" value="high"> おおきめ</label>
+        </div>
+        <div class="btn-row"><button type="button" class="btn btn-sub" id="try-sound">音をためす</button></div>
+      </fieldset>
+      <fieldset class="grades">
+        <legend>くり返し（べんきょう → やすみ）</legend>
+        <label class="inline"><input type="checkbox" id="repeat"> くり返す</label>
+        <div id="repeat-box" hidden>
+          <div class="field">
+            <label for="restMin">やすみ</label>
+            <div class="row"><input type="number" id="restMin" inputmode="numeric" min="1" max="60" step="1" placeholder="5"><span class="unit">分</span></div>
+          </div>
+          <div class="field">
+            <label for="rounds">べんきょうの回数</label>
+            <div class="row"><input type="number" id="rounds" inputmode="numeric" min="2" max="8" step="1" placeholder="4"><span class="unit">回</span></div>
+            <p class="hint">例: 25分＋やすみ5分を4回。最後のやすみは入りません。</p>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="grades" id="wake-box">
+        <legend>画面</legend>
+        <label class="inline"><input type="checkbox" id="wake"> 動いているあいだは画面を消さない</label>
+        <p class="hint" id="wake-note"></p>
+      </fieldset>
+      <p class="small">せっていはこの端末のブラウザ（localStorage、キー <code>gakko-keisan_timer</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
+        <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
+        <button type="button" class="btn btn-sub" id="clear">せっていを消す</button>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+      </div>
+      <p class="small" id="file-msg" role="status"></p>
+    </details>
+
+    <p class="small t-guide"><a href="./guide.html">おうちの方へ: 使い方・音が鳴らないとき・よくある質問</a></p>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学校の計算機</a></li>
+        <li><a href="./" aria-current="page">宿題タイマー</a></li>
+        <li><a href="../atonannichi/">あと何日</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../lib/timer.js"></script>
+  <script src="../lib/common.js"></script>
+  <script src="../lib/screen.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

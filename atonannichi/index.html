@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>○○まであと何日（夏休み・誕生日のカウントダウン、印刷できる表つき）｜学校の計算機｜yorozu-craft</title>
+  <meta name="description" content="夏休み・冬休み・誕生日まであと何日かを計算し、1日ずつぬりつぶすカウントダウン表をA4で印刷できます。夏休みの残り日数、誕生日は毎年の日で。日付は学校や家の予定に合わせて自分で入れます。登録不要・無料。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/gakko-keisan/atonannichi/">
+
+  <meta property="og:title" content="○○まであと何日（夏休み・誕生日のカウントダウン）｜学校の計算機｜yorozu-craft">
+  <meta property="og:description" content="夏休み・誕生日まであと何日か。1日ずつぬりつぶすカウントダウン表をA4で印刷。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/gakko-keisan/atonannichi/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/gakko-keisan/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "○○まであと何日（夏休み・誕生日のカウントダウン）",
+    "description": "夏休み・誕生日まであと何日か。1日ずつぬりつぶすカウントダウン表をA4で印刷。",
+    "url": "https://yorozu-craft.com/gakko-keisan/atonannichi/",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- Google AdSense: 子どもが見る画面なので所有確認の meta だけ（広告は使い方ページに出す。README の決定 D18 と同じ） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./atonannichi.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>○○まであと何日</h1>
+    <p class="subtitle">あと何日かと、ぬりつぶすカウントダウン表（A4）を出します。入力は外部に送信しません。</p>
+  </header>
+
+  <main class="app-main">
+    <form id="form" autocomplete="off" onsubmit="return false">
+      <fieldset class="card req">
+        <legend>なにまで？</legend>
+        <div class="quick" id="quick" aria-label="名前の例">
+          <button type="button" data-name="夏休み">夏休み</button>
+          <button type="button" data-name="冬休み">冬休み</button>
+          <button type="button" data-name="春休み">春休み</button>
+          <button type="button" data-name="誕生日" data-yearly="1">誕生日</button>
+          <button type="button" data-name="運動会">運動会</button>
+        </div>
+        <div class="field">
+          <label for="name">名前</label>
+          <input type="text" id="name" maxlength="20" placeholder="例：夏休み">
+        </div>
+        <div class="field">
+          <label for="date">その日（はじまりの日）</label>
+          <input type="date" id="date" min="1900-01-01" max="2200-12-31">
+          <p class="hint">夏休みの日付は学校ごとに違います。学校のおたよりで確かめて入れてください。</p>
+        </div>
+        <label class="inline"><input type="checkbox" id="yearly"> 毎年くる日（誕生日は生まれた日を入れる）</label>
+      </fieldset>
+
+      <section class="card result-card" id="result-card" tabindex="-1" aria-labelledby="h-result">
+        <h2 id="h-result">あと何日</h2>
+        <div id="result-main" aria-live="polite">
+          <p class="result-big" id="r-big">—</p>
+          <p class="result-sub" id="r-sub">その日を入れると出ます。</p>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn" id="print" disabled>カウントダウン表を印刷</button>
+        </div>
+        <p class="small" id="print-note">今日は数えません（あしたなら「あと1日」）。</p>
+      </section>
+
+      <details class="card opt" id="d-end">
+        <summary>おわりの日（夏休みの残り）: <span class="opt-state">なし</span></summary>
+        <div class="field">
+          <label for="end">おわりの日</label>
+          <input type="date" id="end" min="1900-01-01" max="2200-12-31">
+          <p class="hint">始まったあとは、今日をふくめた残りの日数を出します。</p>
+        </div>
+      </details>
+
+      <details class="card opt" id="d-sheet">
+        <summary>カウントダウン表の見本と設定: <span class="opt-state">A4 縦</span></summary>
+        <div class="preview-wrap" id="preview-wrap"><div class="preview" id="preview"></div></div>
+        <p class="small" id="sheet-info"></p>
+        <div class="field">
+          <label for="from">表のはじまり</label>
+          <input type="date" id="from" min="1900-01-01" max="2200-12-31">
+          <p class="hint">空なら今日から。366日先まで入ります。</p>
+        </div>
+        <fieldset class="grades" id="goal-box" hidden>
+          <legend>表で数える日</legend>
+          <label class="inline"><input type="radio" name="goal" value="start"> はじまりの日まで</label>
+          <label class="inline"><input type="radio" name="goal" value="end"> おわりの日まで（残りを数える）</label>
+        </fieldset>
+        <label class="inline"><input type="checkbox" id="nameLine"> 「なまえ」を書く欄を入れる</label>
+        <label class="inline"><input type="checkbox" id="credit"> 下のすみにサイトの名前を入れる</label>
+      </details>
+
+      <details class="card opt" id="d-list">
+        <summary>ほかの日も並べる: <span class="opt-state">なし</span></summary>
+        <p class="small">近い順に並べます。表を印刷したい日は「上に出す」で上に入れます。</p>
+        <div class="rows list-rows" id="rows"></div>
+        <div class="btn-row"><button type="button" class="btn btn-sub" id="add-row">＋ 日を足す</button></div>
+        <ul class="list-out" id="list-out"></ul>
+      </details>
+
+      <details class="card opt no-print" id="d-file">
+        <summary>入力の保存・書き出し</summary>
+        <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakko-keisan_atonannichi</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
+          <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
+          <button type="button" class="btn btn-sub" id="clear">入力を消す</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden>
+        </div>
+        <p class="small" id="file-msg" role="status"></p>
+      </details>
+
+      <p class="small"><a href="./guide.html">使い方・日数の数え方・よくある質問（夏休みはいつから？）</a></p>
+    </form>
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">学校の計算機</a></li>
+        <li><a href="../timer/">宿題タイマー</a></li>
+        <li><a href="./" aria-current="page">あと何日</a></li>
+        <li><a href="./guide.html">使い方・よくある質問</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- 印刷するカウントダウン表（画面では出さない。見本は #preview に縮小して写す） -->
+  <div id="sheet" class="sheet-print" aria-hidden="true"></div>
+
+  <script src="../lib/atonannichi.js"></script>
+  <script src="../lib/common.js"></script>
+  <script src="../lib/screen.js"></script>
+  <script src="./app.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
