@@ -10,6 +10,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | URL | 内容 |
 |-----|------|
 | `/gakko-keisan/` | 一覧（ハブ） |
+| `/gakko-keisan/data/naishin.json` | 内申点の式と値の公開データ（CC0。`data/README.md`）。`lib/naishin-values.js` から `node tools/build-data.mjs` で書き出す |
 | `/gakko-keisan/naishin/` | 内申点: 都立の換算内申（65・75 点）と調査書点、学力検査・ESAT-J を入れると総合得点（1020 点）。神奈川県（中2＋中3×2＝135 点、Ｓ１）、兵庫県（250 点、素点 500 点、第1志望加算点）、埼玉県（共通選抜。学年の比率 1:1:1〜1:1:3 を 200〜400 点に換算）、千葉県（3 学年の合計 135 点×Ｋ）、大阪府（中1×2＋中2×2＋中3×6＝450 点、タイプⅠ〜Ⅴ、900 点）。目標点から要る学力検査の点数 |
 | `/gakko-keisan/hensachi/` | 偏差値: 点数・平均・標準偏差 → 偏差値、上位の割合・順位の目安（正規分布の仮定）、全員の点数から平均・標準偏差、順位と人数から偏差値の目安、5 教科の表 |
 | `/gakko-keisan/shusseki/` | 出席日数・欠課時数: 学校の決まりの割合（3分の2・4分の3・8割・自分で入れる%）で、休める上限と残り。単位数×35、欠席に数えない回数、科目ごとの一覧 |
@@ -28,7 +29,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 
 | 時期 | 確認すること | 直す場所 |
 |------|------------|---------|
-| 毎年 9 月ごろ | 東京都・神奈川県・埼玉県・千葉県・大阪府・兵庫県の次の年度の入学者選抜の要綱（比率、7:3 と 10:0 の学校、ESAT-J、加算点、埼玉の学年の比率と換算、千葉のＫ、大阪のタイプ。大阪の実施要項は 10 月ごろ） | `lib/naishin-values.js`（`year`・`CHECKED`・`ratios`・`bestSchools`・`kasan`・出典の URL）、`tests/naishin.test.js`、`naishin/guide.html` |
+| 毎年 9 月ごろ | 東京都・神奈川県・埼玉県・千葉県・大阪府・兵庫県の次の年度の入学者選抜の要綱（比率、7:3 と 10:0 の学校、ESAT-J、加算点、埼玉の学年の比率と換算、千葉のＫ、大阪のタイプ。大阪の実施要項は 10 月ごろ） | `lib/naishin-values.js`（`year`・`formula`・`CHECKED`・`ratios`・`bestSchools`・`kasan`・出典の URL）、`tests/naishin.test.js`、`naishin/guide.html`。直したら `node tools/build-data.mjs` で `data/naishin.json` を書き出し直す（テストが書き出し忘れを落とす） |
 | 学習指導要領の改訂時 | 1 単位＝35 単位時間 | `lib/shusseki-values.js` |
 
 値や計算を直したら、各ページの `guide.html` の「更新履歴」に日付と内容を 1 行足す。
@@ -42,6 +43,7 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 | `print/` | 印刷した表のクレジットから来た人の着地ページ（noindex） |
 | `lib/naishin.js`・`lib/hensachi.js`・`lib/shusseki.js`・`lib/timer.js`・`lib/atonannichi.js` | 計算（画面から切り離した純粋関数） |
 | `lib/naishin-values.js`・`lib/shusseki-values.js`・`lib/atonannichi-values.js` | 時点のある値（値・出典・確認日） |
+| `tools/build-data.mjs` / `data/` | 公開データ（`data/naishin.json`、CC0。`data/LICENSE`・`data/README.md`）の書き出し。式（`formula`）と値は `lib/naishin-values.js`、計算例は `lib/naishin.js` から。手で直さない |
 | `lib/common.js` | 保存・共有リンク・バックアップファイル |
 | `lib/screen.js` | 画面の部品（上端の固定バー、`details` の `summary` の状態表示） |
 | `style.css` | 見た目（和紙風の配色、ダークモード対応） |
@@ -52,4 +54,4 @@ yorozu-craft のツールの1つです（共通ルールは [youheioonuki.github
 
 ## ライセンス
 
-MIT License（`LICENSE`）。
+MIT License（`LICENSE`）。`data/` の公開データ（`naishin.json`）だけは CC0 1.0（`data/LICENSE`。yorozu-plans ROADMAP 7.10.3 e）。
