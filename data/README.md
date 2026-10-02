@@ -20,7 +20,10 @@
 
 | 項目 | 意味 |
 |------|------|
+| `license` | `CC0-1.0` |
 | `checked` | 要綱の原文を最後に確かめた日（YYYY-MM-DD） |
+| `generated` | このファイルの中身が変わった日（YYYY-MM-DD）。中身が同じなら書き出し直しても変わらない |
+| `source` | 使った出典の URL の一覧（府県ごとの出典は `prefs[].sources`） |
 | `prefs[].year` | どの年度の入学者選抜か |
 | `prefs[].formula` | 式を 1 行で |
 | `prefs[].params` | 式の値（倍率・満点・比率の選択肢・既定値・加算点など）。名前は `lib/naishin-values.js` と同じ |
