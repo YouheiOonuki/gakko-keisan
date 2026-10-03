@@ -3,6 +3,8 @@
 //   node tools/build-data.mjs --check  書き出した結果とファイルが違えば終了コード 1（テストと同じ確認）
 // data/ のファイルは手で直さない。値と式は lib/naishin-values.js にだけ書き、これを走らせる。
 // 計算例（example）は lib/naishin.js で計算したもの（手で書かない）
+// generated（生成日。ACCEPTANCE 7.10.3 e）: 中身（generated を除く）が今のファイルと同じなら、今のファイルの generated をそのまま使う。
+//   中身が変わったときだけ、その日（日本時間。環境変数 GENERATED=YYYY-MM-DD で指定もできる）になる（seido-keisan の tools/build-data.mjs と同じ決まり）
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -27,7 +29,19 @@ const tidy = (k, v) => (typeof v === 'number' && !Number.isInteger(v) ? Math.rou
 // 値の項目（名前・年度・式・出典・確認日を除いた残り）
 const META = new Set(['name', 'year', 'basis', 'formula', 'sources', 'checked']);
 
-export function buildJson() {
+// 日本時間の今日（YYYY-MM-DD）。GENERATED があればそれ
+export function today() {
+  const g = process.env.GENERATED;
+  if (g && /^\d{4}-\d{2}-\d{2}$/.test(g)) return g;
+  return new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+}
+
+// 使った出典の URL（重複なし、府県の順）。ACCEPTANCE 7.10.3 e の source
+export function sourceUrls() {
+  return [...new Set(Object.values(V.PREFS).flatMap(p => p.sources.map(s => s.url)))];
+}
+
+export function buildJson(generated = today()) {
   const input = exampleInput();
   const prefs = Object.entries(V.PREFS).map(([key, p]) => {
     const params = Object.fromEntries(Object.entries(p).filter(([k]) => !META.has(k)));
@@ -54,6 +68,8 @@ export function buildJson() {
     repository: 'https://github.com/YouheiOonuki/gakko-keisan',
     generated_from: 'lib/naishin-values.js（式と値）・lib/naishin.js（計算例）を tools/build-data.mjs で書き出し',
     checked: V.CHECKED,
+    generated,
+    source: sourceUrls(),
     note: '値は各府県の要綱の原文（sources）で checked の日に確かめたもの。学校ごとの比率・倍率・加点は要綱と各校の資料で確かめること。example は 9 教科すべて評定 4、中1・中2 の合計 36、学力検査 300 点、選択肢は既定で計算した例。',
     subjects: V.SUBJECTS,
     example_input: input,
@@ -63,12 +79,28 @@ export function buildJson() {
   return JSON.stringify(data, tidy, 2) + '\n';
 }
 
-const outputs = { 'data/naishin.json': buildJson() };
+// 今のファイルの generated（無ければ null）
+export function generatedOf(text) {
+  const m = text && text.match(/"generated": "(\d{4}-\d{2}-\d{2})"/);
+  return m ? m[1] : null;
+}
+
+// 中身が同じなら今の generated を残し、変わったときだけ今日にする
+export function stamp(build, now) {
+  const prev = generatedOf(now);
+  if (prev && build(prev) === now) return now;
+  return build(today());
+}
+
+const read = rel => { const f = join(root, rel); return existsSync(f) ? readFileSync(f, 'utf8') : null; };
+export function outputs() {
+  return { 'data/naishin.json': stamp(buildJson, read('data/naishin.json')) };
+}
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const check = process.argv.includes('--check');
   let bad = 0;
-  for (const [rel, body] of Object.entries(outputs)) {
+  for (const [rel, body] of Object.entries(outputs())) {
     const file = join(root, rel);
     const now = existsSync(file) ? readFileSync(file, 'utf8') : null;
     if (now === body) { console.log(rel + ': 変更なし'); continue; }

@@ -8,6 +8,26 @@
   "repository": "https://github.com/YouheiOonuki/gakko-keisan",
   "generated_from": "lib/naishin-values.js（式と値）・lib/naishin.js（計算例）を tools/build-data.mjs で書き出し",
   "checked": "2026-09-25",
+  "generated": "2026-10-03",
+  "source": [
+    "https://www.kyoiku.metro.tokyo.lg.jp/information/press/2026/09/2026091703",
+    "https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/20260916_r9_09",
+    "https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/20260916_r9_10",
+    "https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/jishiyoryo.html",
+    "https://www.pref.kanagawa.jp/documents/63604/14_chuui1.pdf",
+    "https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/senko_kijun.html",
+    "https://www2.hyogo-c.ed.jp/hpe/koko/nyuushi/senbatsuyoukou_r9/",
+    "https://www.pref.osaka.lg.jp/documents/129117/02_r9_hs_hoshin.pdf",
+    "https://www.pref.osaka.lg.jp/documents/129117/r9_senbatsuhouhou_ippan_zennichi.pdf",
+    "https://www.pref.osaka.lg.jp/documents/129117/r09_admission_koukou.pdf",
+    "https://www.pref.osaka.lg.jp/o180040/kotogakko/gakuji-g3/r09_senbatsu.html",
+    "https://www.pref.saitama.lg.jp/f2208/r9nyuushi-jisshiyoukou.html",
+    "https://www.pref.saitama.lg.jp/documents/282982/36senbatsuyouryou_r09.pdf",
+    "https://www.pref.saitama.lg.jp/documents/282982/16dai15_r09.pdf",
+    "https://www.pref.saitama.lg.jp/f2208/r9nyuushi-senbatsuzisshinaiyou.html",
+    "https://www.pref.chiba.lg.jp/kyouiku/shidou/nyuushi/koukou/r9/r9jissiyoukou.html",
+    "https://www.pref.chiba.lg.jp/kyouiku/shidou/nyuushi/koukou/r9/documents/00r9jissiyoukou2.pdf"
+  ],
   "note": "値は各府県の要綱の原文（sources）で checked の日に確かめたもの。学校ごとの比率・倍率・加点は要綱と各校の資料で確かめること。example は 9 教科すべて評定 4、中1・中2 の合計 36、学力検査 300 点、選択肢は既定で計算した例。",
   "subjects": [
     {

@@ -13,7 +13,23 @@ const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
 
 test('data/naishin.json が lib/naishin-values.js から書き出した結果と同じ（node tools/build-data.mjs）', async () => {
   const B = await import(path.join(root, 'tools', 'build-data.mjs'));
-  assert.equal(read('data/naishin.json'), B.buildJson());
+  assert.equal(read('data/naishin.json'), B.outputs()['data/naishin.json']);
+});
+
+// ACCEPTANCE 7.10.3 e: ファイルの中に license・generated・checked・source。generated は中身が変わったときだけ変わる
+test('generated（生成日）と source: 中身が同じなら書き出し直しても変わらない', async () => {
+  const B = await import(path.join(root, 'tools', 'build-data.mjs'));
+  const json = read('data/naishin.json');
+  const d = JSON.parse(json);
+  assert.match(d.generated, /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(d.generated >= d.checked);
+  assert.ok(d.source.length > 0);
+  for (const u of d.source) assert.match(u, /^https:\/\//);
+  assert.equal(B.stamp(B.buildJson, json), json);
+  process.env.GENERATED = '2099-01-01';
+  try {
+    assert.match(B.stamp(B.buildJson, json.replace('"title": "', '"title": "x')), /"generated": "2099-01-01"/);
+  } finally { delete process.env.GENERATED; }
 });
 
 test('naishin.json: CC0・確認日・各府県の出典の URL・計算例', () => {
