@@ -5,6 +5,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 const V = require('../lib/naishin-values.js');
 const N = require('../lib/naishin.js');
 
@@ -12,13 +13,13 @@ const root = path.join(__dirname, '..');
 const read = rel => fs.readFileSync(path.join(root, rel), 'utf8');
 
 test('data/naishin.json が lib/naishin-values.js から書き出した結果と同じ（node tools/build-data.mjs）', async () => {
-  const B = await import(path.join(root, 'tools', 'build-data.mjs'));
+  const B = await import(pathToFileURL(path.join(root, 'tools', 'build-data.mjs')).href);
   assert.equal(read('data/naishin.json'), B.outputs()['data/naishin.json']);
 });
 
 // ACCEPTANCE 7.10.3 e: ファイルの中に license・generated・checked・source。generated は中身が変わったときだけ変わる
 test('generated（生成日）と source: 中身が同じなら書き出し直しても変わらない', async () => {
-  const B = await import(path.join(root, 'tools', 'build-data.mjs'));
+  const B = await import(pathToFileURL(path.join(root, 'tools', 'build-data.mjs')).href);
   const json = read('data/naishin.json');
   const d = JSON.parse(json);
   assert.match(d.generated, /^\d{4}-\d{2}-\d{2}$/);
