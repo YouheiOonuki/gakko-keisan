@@ -64,3 +64,6 @@
   .sheet-print { display: block !important; }
   .page { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* 印刷の注記（output。段 3 の 5） */
+output#print-note { display: block; }

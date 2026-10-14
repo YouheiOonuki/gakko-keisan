@@ -125,7 +125,7 @@
     if (!r) {
       $('r-big').textContent = '—';
       $('r-big').classList.remove('is-past');
-      $('r-sub').textContent = d.main.date ? '日付を読み取れませんでした。' : 'その日を入れると出ます。';
+      $('r-sub').textContent = d.main.date ? '日付を読み取れませんでした。' : '';
     } else {
       var h = headline(d.main, r);
       $('r-big').textContent = h.big;
@@ -144,7 +144,7 @@
     $('sheet-info').textContent = msg;
     var ok = !!(sp && sp.s.ok);
     $('print').disabled = !ok;
-    $('print-note').textContent = ok || !r ? '今日は数えません（あしたなら「あと1日」）。' : msg;
+    $('print-note').textContent = !r ? '' : ok ? '今日は数えません（あしたなら「あと1日」）。' : msg;
     var html = ok ? buildSheet(d, sp) : '';
     if (html !== lastSheet) {
       lastSheet = html;
