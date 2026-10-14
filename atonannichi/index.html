@@ -67,9 +67,8 @@
           <input type="text" id="name" maxlength="20" placeholder="例：夏休み">
         </div>
         <div class="field">
-          <label for="date">その日（はじまりの日）</label>
+          <label for="date">その日（はじまりの日。夏休みは学校ごとに違うので、おたよりの日付）</label>
           <input type="date" id="date" min="1900-01-01" max="2200-12-31">
-          <p class="hint">夏休みの日付は学校ごとに違います。学校のおたよりで確かめて入れてください。</p>
         </div>
         <label class="inline"><input type="checkbox" id="yearly"> 毎年くる日（誕生日は生まれた日を入れる）</label>
       </fieldset>
@@ -78,12 +77,12 @@
         <h2 id="h-result">あと何日</h2>
         <div id="result-main" aria-live="polite">
           <p class="result-big" id="r-big">—</p>
-          <p class="result-sub" id="r-sub">その日を入れると出ます。</p>
+          <p class="result-sub" id="r-sub"></p>
         </div>
         <div class="btn-row">
           <button type="button" class="btn" id="print" disabled>カウントダウン表を印刷</button>
         </div>
-        <p class="small" id="print-note">今日は数えません（あしたなら「あと1日」）。</p>
+        <output class="small" id="print-note"></output>
       </section>
 
       <details class="card opt" id="d-end">
