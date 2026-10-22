@@ -50,6 +50,8 @@
     if (!$('rows').children.length) addRow();
   }
 
+  // 科目名は共有リンクから来るので、表に入れる前にエスケープする（K191 段 3 F1。atonannichi と同じ形）
+  function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function row(th, td, rule, total) {
     return '<tr' + (total ? ' class="total"' : '') + '><th>' + th + (rule ? '<span class="rule">' + rule + '</span>' : '') + '</th><td>' + td + '</td></tr>';
   }
@@ -95,7 +97,7 @@
     var t = ratio ? S.table(d.rows, ratio) : [];
     $('list-table').tBodies[0].innerHTML = t.length
       ? '<tr><th>科目</th><td>上限 / 残り</td></tr>' + t.map(function (x) {
-        return row(x.name, x.r.allowed + ' / ' + (x.r.over ? (-x.r.remain) + ' 回超え' : 'あと ' + x.r.remain + ' 回'), x.total + ' 回');
+        return row(esc(x.name), x.r.allowed + ' / ' + (x.r.over ? (-x.r.remain) + ' 回超え' : 'あと ' + x.r.remain + ' 回'), x.total + ' 回');
       }).join('')
       : '';
     var ex = Math.floor(Number(d.excused)) || 0;
@@ -104,7 +106,8 @@
       'd-excused': ex + ' 回',
       'd-list': t.length ? t.length + ' 科目（いちばん少ないのは ' + t[0].name + '）' : (ratio ? '入力なし' : '割合を選ぶと出ます'),
     });
-    C.store.set(KEY, d);
+    // 共有リンクで開いた直後は、端末に残っている入力を上書きしない。触ったら保存する（K191 段 3 F5）
+    if (!fromShare) C.store.set(KEY, d);
   }
 
   $('units-use').addEventListener('click', function () {
@@ -116,9 +119,12 @@
   });
   $('add-row').addEventListener('click', function () { addRow(); update(); $('rows').lastChild.querySelector('.rn').focus(); });
 
-  apply(C.fromShareHash(location.hash) || C.store.get(KEY, {}));
-  $('form').addEventListener('input', update);
-  $('form').addEventListener('change', update);
-  C.wireFile({ key: KEY, current: current, apply: apply, update: update, msg: $('file-msg') });
+  var shared = C.fromShareHash(location.hash), fromShare = !!shared;
+  apply(shared || C.store.get(KEY, {}));
+  function touched() { fromShare = false; update(); }
+  document.addEventListener('click', function (e) { if (e.target.closest('button')) fromShare = false; }, true);   // 科目の追加・削除も触ったうち
+  $('form').addEventListener('input', touched);
+  $('form').addEventListener('change', touched);
+  C.wireFile({ key: KEY, current: current, apply: function (d) { fromShare = false; apply(d); }, update: update, msg: $('file-msg') });
   update();
 })();
