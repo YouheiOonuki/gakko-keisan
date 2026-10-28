@@ -1,28 +1,19 @@
 /* ○○まであと何日（atonannichi/）だけの見た目: 名前の例のボタン・一覧・カウントダウン表（A4）と見本 */
-.quick { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
-.quick button {
-  min-height: 44px; padding: 0 0.8rem; border-radius: 22px; border: 1px solid var(--border);
-  background: var(--card); color: var(--text); font: inherit; font-size: 0.92rem; cursor: pointer;
-}
-.quick button[aria-pressed="true"] { background: var(--accent); color: var(--card); border-color: var(--accent); }
-.quick button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.field input[type="date"] {
-  padding: 0.45rem 0.5rem; font-size: 1rem; border: 1px solid var(--border); border-radius: 6px;
-  background: var(--card); color: var(--text); min-height: 44px; min-width: 11rem;
-}
+.quick { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.quick .chip[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.field input[type="date"] { min-width: 11rem; }
 .result-big.is-past { color: var(--text); }
-.result-big.is-long { font-size: 1.45rem; }
+.result-big.is-long { font-size: var(--fs-l); }
 
 /* ほかの日（行を足す入力） */
 .list-rows .r { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr) auto 44px; }
-.list-rows .r input[type="date"] { min-width: 0; padding: 0.35rem 0.2rem; font-size: 0.95rem; }
-.list-rows .r .ry { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--muted); }
-.list-rows .r .ry input { width: 1.2rem; height: 1.2rem; margin-top: 0.5rem; accent-color: var(--accent); }
-.list-out { list-style: none; margin-top: 0.6rem; }
-.list-out li { display: flex; align-items: center; gap: 0.6rem; justify-content: space-between; border-bottom: 1px solid var(--border); padding: 0.35rem 0; font-size: 0.92rem; }
+.list-rows .r input[type="date"] { min-width: 0; padding-inline: var(--sp-1); }
+.list-rows .r .ry { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: var(--tap); font-size: var(--fs-s); color: var(--muted); }
+.list-rows .r .ry input { width: 1.2rem; height: 1.2rem; accent-color: var(--accent); }
+.list-out { list-style: none; margin-top: var(--sp-3); }
+.list-out li { display: flex; align-items: center; gap: var(--sp-3); justify-content: space-between; border-bottom: 1px solid var(--border); padding: var(--sp-1) 0; }
 .list-out .days { font-weight: 700; color: var(--accent); white-space: nowrap; }
-.list-out .when { display: block; font-size: 0.78rem; color: var(--muted); }
-.list-out button { min-height: 40px; }
+.list-out .when { display: block; font-size: var(--fs-s); color: var(--muted); }
 
 /* ===== カウントダウン表（A4 縦）。画面では #sheet を出さず、#preview に 1 枚目を縮小して写す ===== */
 .sheet-print { display: none; }
@@ -53,9 +44,8 @@
 .pg-foot { display: flex; justify-content: space-between; font-size: 8.5pt; color: #555; margin-top: 2mm; }
 
 /* 見本: 1 枚目を幅に合わせて縮小（app.js が --s に縮尺を入れる）。ダークモードでも白のまま */
-.preview-wrap { width: 100%; max-width: 360px; margin: 0 auto 0.4rem; border: 1px solid var(--border); background: #fff; overflow: hidden; }
+.preview-wrap { width: 100%; max-width: 360px; margin: 0 auto var(--sp-2); border: 1px solid var(--border); background: #fff; overflow: hidden; }
 .preview { width: 210mm; height: 297mm; transform: scale(var(--s, 0.4)); transform-origin: 0 0; }
-.preview .page { box-shadow: none; }
 
 @media print {
   @page { size: A4 portrait; margin: 0; }

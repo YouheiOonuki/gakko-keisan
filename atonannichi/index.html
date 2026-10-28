@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -56,11 +56,11 @@
       <fieldset class="card req">
         <legend>なにまで？</legend>
         <div class="quick" id="quick" aria-label="名前の例">
-          <button type="button" data-name="夏休み">夏休み</button>
-          <button type="button" data-name="冬休み">冬休み</button>
-          <button type="button" data-name="春休み">春休み</button>
-          <button type="button" data-name="誕生日" data-yearly="1">誕生日</button>
-          <button type="button" data-name="運動会">運動会</button>
+          <button type="button" class="chip" data-name="夏休み">夏休み</button>
+          <button type="button" class="chip" data-name="冬休み">冬休み</button>
+          <button type="button" class="chip" data-name="春休み">春休み</button>
+          <button type="button" class="chip" data-name="誕生日" data-yearly="1">誕生日</button>
+          <button type="button" class="chip" data-name="運動会">運動会</button>
         </div>
         <div class="field">
           <label for="name">名前</label>
@@ -80,7 +80,7 @@
           <p class="result-sub" id="r-sub"></p>
         </div>
         <div class="btn-row">
-          <button type="button" class="btn" id="print" disabled>カウントダウン表を印刷</button>
+          <button type="button" class="btn btn-primary" id="print" disabled>カウントダウン表を印刷</button>
         </div>
         <output class="small" id="print-note"></output>
       </section>
@@ -116,7 +116,7 @@
         <summary>ほかの日も並べる: <span class="opt-state">なし</span></summary>
         <p class="small">近い順に並べます。表を印刷したい日は「上に出す」で上に入れます。</p>
         <div class="rows list-rows" id="rows"></div>
-        <div class="btn-row"><button type="button" class="btn btn-sub" id="add-row">＋ 日を足す</button></div>
+        <div class="btn-row"><button type="button" class="btn" id="add-row">＋ 日を足す</button></div>
         <ul class="list-out" id="list-out"></ul>
       </details>
 
@@ -124,9 +124,9 @@
         <summary>入力の保存・書き出し</summary>
         <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakko-keisan_atonannichi</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
         <div class="btn-row">
-          <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
-          <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
-          <button type="button" class="btn btn-sub" data-reset-storage="gakko-keisan_atonannichi">保存した内容をすべて消す（初期状態に戻す）</button>
+          <button type="button" class="btn" id="export">ファイルに書き出す</button>
+          <button type="button" class="btn" id="import">ファイルから読み込む</button>
+          <button type="button" class="btn" data-reset-storage="gakko-keisan_atonannichi">保存した内容をすべて消す（初期状態に戻す）</button>
           <input type="file" id="import-file" accept="application/json,.json" hidden>
         </div>
         <p class="small" id="file-msg" role="status"></p>
