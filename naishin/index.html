@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -46,7 +46,7 @@
 <body>
 
   <!-- 固定バー（SCREEN.md 1.1・D59）: 結果が出たあと、結果が画面の外にあるときだけ上端に出す -->
-  <div class="fixbar" id="fixbar" role="status" hidden>
+  <div class="fixed-bar" id="fixbar" role="status" hidden>
     <a href="#result-card"><span id="fixbar-text"></span> ▸ 結果へ</a>
   </div>
 
@@ -55,7 +55,7 @@
     <p class="subtitle">通知表の評定から、入試で使う内申点を出します。令和9年度（2027年春）の入試の要綱どおり。</p>
   </header>
 
-  <main class="app-main">
+  <main class="app-main layout-2col">
 
     <p class="badge" id="asof">令和9年度入試の要綱・確認日 <span id="asof-date">2026年9月25日</span>・入力は外部に送信しません</p>
 
@@ -237,9 +237,9 @@
         <summary>入力の保存・書き出し</summary>
         <p class="small">入力内容はこの端末のブラウザ（localStorage、キー <code>gakko-keisan_naishin</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
         <div class="btn-row">
-          <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
-          <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
-          <button type="button" class="btn btn-sub" data-reset-storage="gakko-keisan_naishin">保存した内容をすべて消す（初期状態に戻す）</button>
+          <button type="button" class="btn" id="export">ファイルに書き出す</button>
+          <button type="button" class="btn" id="import">ファイルから読み込む</button>
+          <button type="button" class="btn" data-reset-storage="gakko-keisan_naishin">保存した内容をすべて消す（初期状態に戻す）</button>
           <input type="file" id="import-file" accept="application/json,.json" hidden>
         </div>
         <p class="small" id="file-msg" role="status"></p>

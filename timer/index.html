@@ -18,8 +18,8 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <script type="application/ld+json">
   {
@@ -57,9 +57,9 @@
       <legend>なんぷん？（分）</legend>
       <div class="chips" id="chips"></div>
       <div class="t-adjust">
-        <button type="button" class="btn btn-sub t-step" id="minus" aria-label="1分へらす">−1</button>
+        <button type="button" class="btn t-step" id="minus" aria-label="1分へらす">−1</button>
         <span class="t-min" id="t-min" aria-live="polite">15分</span>
-        <button type="button" class="btn btn-sub t-step" id="plus" aria-label="1分ふやす">＋1</button>
+        <button type="button" class="btn t-step" id="plus" aria-label="1分ふやす">＋1</button>
       </div>
     </fieldset>
 
@@ -76,8 +76,8 @@
       </div>
       <p class="t-phase" id="t-phase"></p>
       <div class="btn-row t-ctrl">
-        <button type="button" class="btn t-start" id="start">スタート</button>
-        <button type="button" class="btn btn-sub" id="reset">リセット</button>
+        <button type="button" class="btn btn-primary t-start" id="start">スタート</button>
+        <button type="button" class="btn" id="reset">リセット</button>
       </div>
       <p class="t-status" id="t-status" role="status"></p>
     </section>
@@ -103,7 +103,7 @@
           <label class="inline"><input type="radio" name="volume" value="mid"> ふつう</label>
           <label class="inline"><input type="radio" name="volume" value="high"> おおきめ</label>
         </div>
-        <div class="btn-row"><button type="button" class="btn btn-sub" id="try-sound">音をためす</button></div>
+        <div class="btn-row"><button type="button" class="btn" id="try-sound">音をためす</button></div>
       </fieldset>
       <fieldset class="grades">
         <legend>くり返し（べんきょう → やすみ）</legend>
@@ -127,9 +127,9 @@
       </fieldset>
       <p class="small">せっていはこの端末のブラウザ（localStorage、キー <code>gakko-keisan_timer</code>）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
       <div class="btn-row">
-        <button type="button" class="btn btn-sub" id="export">ファイルに書き出す</button>
-        <button type="button" class="btn btn-sub" id="import">ファイルから読み込む</button>
-        <button type="button" class="btn btn-sub" data-reset-storage="gakko-keisan_timer">保存した内容をすべて消す（初期状態に戻す）</button>
+        <button type="button" class="btn" id="export">ファイルに書き出す</button>
+        <button type="button" class="btn" id="import">ファイルから読み込む</button>
+        <button type="button" class="btn" data-reset-storage="gakko-keisan_timer">保存した内容をすべて消す（初期状態に戻す）</button>
         <input type="file" id="import-file" accept="application/json,.json" hidden>
       </div>
       <p class="small" id="file-msg" role="status"></p>
