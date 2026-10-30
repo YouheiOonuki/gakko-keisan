@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <!-- 学校の計算機: 通知表（枠と行）と、はなまる -->
-  <rect x="6" y="6" width="52" height="52" rx="10" fill="#faf6ee" stroke="#8b4513" stroke-width="4"/>
-  <path d="M16 20h20M16 30h20M16 40h14" stroke="#8b4513" stroke-width="4" stroke-linecap="round"/>
+  <rect x="6" y="6" width="52" height="52" rx="10" fill="#eef0f2" stroke="#0e5a6b" stroke-width="4"/>
+  <path d="M16 20h20M16 30h20M16 40h14" stroke="#0e5a6b" stroke-width="4" stroke-linecap="round"/>
   <circle cx="44" cy="40" r="8" fill="none" stroke="#c0392b" stroke-width="4"/>
 </svg>
