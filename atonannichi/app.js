@@ -165,7 +165,7 @@
       else if (rr.state === 'past') t = (-rr.days) + ' 日すぎた';
       else t = 'あと ' + rr.days + ' 日';
       return '<li><span>' + nm + (rr.age ? '（' + rr.age + 'さい）' : '') + '<span class="when">' + A.label(rr.target) + '</span></span>' +
-        '<span class="days">' + t + '</span><button type="button" class="btn btn-sub" data-i="' + items.indexOf(x.it) + '">上に出す</button></li>';
+        '<span class="days">' + t + '</span><button type="button" class="btn" data-i="' + items.indexOf(x.it) + '">上に出す</button></li>';
     }).join('');
     Array.prototype.forEach.call($('list-out').querySelectorAll('button'), function (b) {
       b.addEventListener('click', function () {
