@@ -158,6 +158,7 @@
     });
     $('minus').disabled = $('plus').disabled = mode === 'running';
     document.title = mode === 'running' || mode === 'paused' ? txt + ' ' + TITLE : TITLE;
+    window.yzUsed?.();
   }
 
   // --- せってい ---
