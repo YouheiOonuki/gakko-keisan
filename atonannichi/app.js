@@ -185,6 +185,7 @@
       'd-list': items.length ? items.length + ' 件' + (first && first.r && first.r.state !== 'past' ? '（いちばん近いのは ' + (first.it.name || 'その日') + '）' : '') : 'なし',
     });
     C.store.set(KEY, d);
+    window.yzUsed?.();
   }
 
   Array.prototype.forEach.call($('quick').children, function (b) {
