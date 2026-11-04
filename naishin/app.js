@@ -314,6 +314,7 @@
     bar.set(barText);
     window.YorozuScreen.detailsSummary({ 'd-exam': examState, 'd-target': tgt[pref] ? '目標 ' + tgt[pref] + ' 点' : '入力なし' });
     C.store.set(KEY, current());
+    window.yzUsed?.();
   }
 
   var shared = C.fromShareHash(location.hash);

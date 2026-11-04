@@ -108,6 +108,7 @@
     });
     // 共有リンクで開いた直後は、端末に残っている入力を上書きしない。触ったら保存する（K191 段 3 F5）
     if (!fromShare) C.store.set(KEY, d);
+    window.yzUsed?.();
   }
 
   $('units-use').addEventListener('click', function () {

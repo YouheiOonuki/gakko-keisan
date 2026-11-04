@@ -100,6 +100,7 @@
 
     window.YorozuScreen.detailsSummary({ 'd-n': nState, 'd-list': listState, 'd-rank': rankState, 'd-5': done ? done + '教科' : '入力なし' });
     C.store.set(KEY, d);
+    window.yzUsed?.();
   }
 
   $('list-use').addEventListener('click', function () {
