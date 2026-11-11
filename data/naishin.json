@@ -7,8 +7,8 @@
   "data_url": "https://yorozu-craft.com/gakko-keisan/data/naishin.json",
   "repository": "https://github.com/YouheiOonuki/gakko-keisan",
   "generated_from": "lib/naishin-values.js（式と値）・lib/naishin.js（計算例）を tools/build-data.mjs で書き出し",
-  "checked": "2026-09-25",
-  "generated": "2026-10-03",
+  "checked": "2026-11-12",
+  "generated": "2026-11-12",
   "source": [
     "https://www.kyoiku.metro.tokyo.lg.jp/information/press/2026/09/2026091703",
     "https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/20260916_r9_09",
@@ -212,22 +212,22 @@
           "name": "令和９年度東京都立高等学校入学者選抜実施要綱・同細目について（東京都教育委員会、2026年9月17日）",
           "url": "https://www.kyoiku.metro.tokyo.lg.jp/information/press/2026/09/2026091703",
           "note": "実施要綱 第2-10-1 選考（1000 点・1020 点、7:3、ESAT-J の点数化、評定の1倍・2倍）、第4-3-1(5) 第3学年の評定",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "別表4 令和９年度入学者選抜実施方法一覧（PDF）",
           "url": "https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/20260916_r9_09",
           "note": "評定の満点は 5 教科 65 点・3 教科 75 点、調査書点＝評定の得点×調査書点の満点÷評定の満点",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "別表4（1）普通教育を主とする学科（PDF）",
           "url": "https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/20260916_r9_10",
           "note": "北園・武蔵野北の 7:3（第二次募集は 6:4）と 10:0 の高いほう。深沢は別表4（2）の注",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         }
       ],
-      "checked": "2026-09-25"
+      "checked": "2026-11-12"
     },
     {
       "key": "kanagawa",
@@ -270,22 +270,22 @@
           "name": "令和9年度神奈川県公立高等学校の入学者の募集及び選抜実施要領（神奈川県教育委員会、2026年7月1日更新）",
           "url": "https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/jishiyoryo.html",
           "note": "「1 一般募集」6(2)ア(ｱ)〜(ｴ): Ａ・Ｂ・Ｃ・Ｄ、100 点満点への換算（小数第3位を四捨五入）、Ｓ１・Ｓ２",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "（注釈）令和9年度調査書作成上の注意（PDF）",
           "url": "https://www.pref.kanagawa.jp/documents/63604/14_chuui1.pdf",
           "note": "第3学年の評定は第2学期までのもの",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "令和9年度神奈川県公立高等学校入学者選抜選考基準及び特色検査の概要",
           "url": "https://www.pref.kanagawa.jp/docs/dc4/nyusen/nyusen/senko_kijun.html",
           "note": "学校ごとの比率（ｆ:ｇ）と重点化",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         }
       ],
-      "checked": "2026-09-25"
+      "checked": "2026-11-12"
     },
     {
       "key": "hyogo",
@@ -327,10 +327,10 @@
           "name": "令和９年度兵庫県公立高等学校入学者選抜要綱（兵庫県教育委員会、2026年9月3日掲載）",
           "url": "https://www2.hyogo-c.ed.jp/hpe/koko/nyuushi/senbatsuyoukou_r9/",
           "note": "第12210項（単独選抜の判定資料Ａ・Ｃ）、第12318項（複数志願選抜の素点と第1志望加算点）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         }
       ],
-      "checked": "2026-09-25"
+      "checked": "2026-11-12"
     },
     {
       "key": "osaka",
@@ -416,28 +416,28 @@
           "name": "令和９年度大阪府公立高等学校入学者選抜方針（PDF、大阪府教育委員会）",
           "url": "https://www.pref.osaka.lg.jp/documents/129117/02_r9_hs_hoshin.pdf",
           "note": "第2-Ⅵ-1(3)イ 総合点の算出（学力検査の合計、各学年の評定の合計に倍率、学校が選んだ倍率）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "大阪府公立高等学校入学者選抜の方法 一般入学者選抜（全日制）（PDF）",
           "url": "https://www.pref.osaka.lg.jp/documents/129117/r9_senbatsuhouhou_ippan_zennichi.pdf",
           "note": "Step1: 学力検査 各90点・450点、9教科の評定は各50点（3学年×6＋2学年×2＋1学年×2）、タイプⅠ〜Ⅴ（900点）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "令和９年度 アドミッションポリシー並びに学力検査問題の種類並びに…倍率のタイプ（PDF）",
           "url": "https://www.pref.osaka.lg.jp/documents/129117/r09_admission_koukou.pdf",
           "note": "5ページ（注４）表２ 一般入学者選抜（全日制）の倍率のタイプ。学校ごとのタイプは各校の欄",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "令和9年度公立高等学校入学者選抜（大阪府、2026年9月16日更新）",
           "url": "https://www.pref.osaka.lg.jp/o180040/kotogakko/gakuji-g3/r09_senbatsu.html",
           "note": "上の資料の掲載ページ。実施要項は未掲載（2026-09-25）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         }
       ],
-      "checked": "2026-09-25"
+      "checked": "2026-11-12"
     },
     {
       "key": "saitama",
@@ -523,28 +523,28 @@
           "name": "令和9年度入学者選抜実施要項・入学者選抜要領（埼玉県教育委員会、2026年7月31日掲載）",
           "url": "https://www.pref.saitama.lg.jp/f2208/r9nyuushi-jisshiyoukou.html",
           "note": "掲載ページ",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "2 一般募集入学者選抜要領（PDF）",
           "url": "https://www.pref.saitama.lg.jp/documents/282982/36senbatsuyouryou_r09.pdf",
           "note": "3(1) 共通選抜: 学力検査500点、調査書の基本点（1:1:1・1:1:2・1:1:3）を200・300・400点に換算（小数第1位を四捨五入）、面接30点×1倍または2倍（105ページ）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "第15 調査書…作成要領（PDF）",
           "url": "https://www.pref.saitama.lg.jp/documents/282982/16dai15_r09.pdf",
           "note": "2(2)ア 第3学年の評定は第1学期及び第2学期の成績による（35ページ）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "各高等学校の選抜実施内容（確定版、2026年9月16日掲載）",
           "url": "https://www.pref.saitama.lg.jp/f2208/r9nyuushi-senbatsuzisshinaiyou.html",
           "note": "学校ごとの学年の比率・調査書の得点・面接の倍率（第1次・第2次）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         }
       ],
-      "checked": "2026-09-25"
+      "checked": "2026-11-12"
     },
     {
       "key": "chiba",
@@ -584,16 +584,16 @@
           "name": "令和9年度千葉県公立高等学校入学者選抜実施要項（千葉県教育委員会、2026年9月11日）",
           "url": "https://www.pref.chiba.lg.jp/kyouiku/shidou/nyuushi/koukou/r9/r9jissiyoukou.html",
           "note": "掲載ページ",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         },
         {
           "name": "同 全ページ（PDF）",
           "url": "https://www.pref.chiba.lg.jp/kyouiku/shidou/nyuushi/koukou/r9/documents/00r9jissiyoukou2.pdf",
           "note": "Ⅰ 一般入学者選抜 第7-3(1) 学力検査 各教科100点（7ページ）、第9-4(1) 調査書の得点＝評定の全学年の合計×Ｋ（0.5以上2以下）・加点50点まで、(3) 学校設定検査（10ページ）、別記1（69ページ）、付表2 各校のＫ（137ページ〜）",
-          "checked": "2026-09-25"
+          "checked": "2026-11-12"
         }
       ],
-      "checked": "2026-09-25"
+      "checked": "2026-11-12"
     }
   ],
   "others": [
