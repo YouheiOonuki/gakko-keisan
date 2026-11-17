@@ -41,17 +41,63 @@
   var bar = window.YorozuScreen.fixedBar({ bar: 'fixbar', watch: 'result-main', jump: 'result-card', text: 'fixbar-text' });
   var lastStats = null;
 
+  // --- 結果の下の山の図（正規分布）。位置と面の割合は H.bellMark（上位の割合と同じ関数） ---
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var B = H.BELL, W = 600, L = 24, R = 24, TOP = 14, BASE = 158, HGT = 196;
+  function sx(t) { return L + (t - B.min) / (B.max - B.min) * (W - L - R); }
+  function sy(h) { return BASE - h * (BASE - TOP); }
+  function curve(from, to) {
+    var pts = [];
+    for (var t = from; t < to; t += 0.5) pts.push(sx(t).toFixed(1) + ' ' + sy(H.bellHeight(t)).toFixed(1));
+    pts.push(sx(to).toFixed(1) + ' ' + sy(H.bellHeight(to)).toFixed(1));
+    return pts;
+  }
+  function renderBell(t, m) {
+    var box = $('bell');
+    box.textContent = '';
+    var svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + HGT);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', '偏差値の山（正規分布）' + (m ? '。偏差値 ' + f1(t) + '、上位 約 ' + pct(m.share) + '%' : ''));
+    function el(name, attrs, text) {
+      var e = document.createElementNS(SVGNS, name);
+      Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+      if (text !== undefined) e.textContent = text;
+      svg.appendChild(e); return e;
+    }
+    if (m) el('path', { class: 'bell-area', d: 'M' + curve(m.x, B.max).join(' L') + ' L' + sx(B.max) + ' ' + BASE + ' L' + sx(m.x).toFixed(1) + ' ' + BASE + ' Z' });
+    el('line', { class: 'bell-axis', x1: L, y1: BASE, x2: W - R, y2: BASE });
+    B.ticks.forEach(function (k) {
+      el('line', { class: 'bell-tick', x1: sx(k), y1: BASE, x2: sx(k), y2: BASE + 8 });
+      el('text', { class: 'bell-num', x: sx(k), y: BASE + 32, 'text-anchor': 'middle' }, String(k));
+    });
+    el('path', { class: 'bell-line', d: 'M' + curve(B.min, B.max).join(' L') });
+    if (m) {
+      var x = sx(m.x).toFixed(1), y = m.edge ? BASE - 14 : sy(m.h);
+      el('line', { class: 'bell-you', x1: x, y1: BASE, x2: x, y2: TOP - 4 });
+      if (m.edge) {   // 20 未満・80 超えは端の線の外側に、外を指す三角
+        var d = m.edge === 'high' ? 1 : -1, x0 = sx(m.x) + d * 3, tip = sx(m.x) + d * 21;
+        el('path', { class: 'bell-dot', d: 'M' + tip + ' ' + y + ' L' + x0 + ' ' + (y - 13) + ' L' + x0 + ' ' + (y + 13) + ' Z', 'data-edge': m.edge });
+      } else {
+        el('circle', { class: 'bell-dot', cx: x, cy: y.toFixed(1), r: 9 });
+      }
+    }
+    box.appendChild(svg);
+  }
+
   function update() {
     var d = current();
     var t = H.hensachi(d.score, d.mean, d.sd);
     var rows = [];
     var nState = '入力なし';
+    var mark = H.bellMark(t);
+    renderBell(t, mark);
     if (t === null) {
       $('r-big').textContent = '—';
       $('r-sub').textContent = d.sd !== '' && Number(d.sd) <= 0 ? '標準偏差は 0 より大きい数を入れてください。' : '3つを入れると出ます。';
       bar.set('');
     } else {
-      var up = H.upperShare(t);
+      var up = mark.share;
       $('r-big').textContent = f1(t);
       $('r-sub').textContent = '上位 約 ' + pct(up) + '%（正規分布の仮定）';
       bar.set('偏差値 ' + f1(t));

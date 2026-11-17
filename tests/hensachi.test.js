@@ -60,3 +60,31 @@ test('平均と標準偏差（n で割る・n−1 で割る）、一覧の中の
   assert.equal(H.rankInList(70, [50, 60, 70, 80, 70]), 2);
   assert.equal(H.rankInList(90, [50, 60]), 1);
 });
+
+// 結果の下の山の図（Q-359）。面の割合は画面の「上位の割合」と同じ upperShare から
+const pct1 = (p) => (Math.round(p * 1000) / 10).toFixed(1);
+test('山の図: 印より上の側の面 = 上位の割合（50 → 50.0%、60 → 15.9%、70 → 2.3%、40 → 84.1%）', () => {
+  assert.equal(pct1(H.bellMark(50).share), '50.0');
+  assert.equal(pct1(H.bellMark(60).share), '15.9');
+  assert.equal(pct1(H.bellMark(70).share), '2.3');
+  assert.equal(pct1(H.bellMark(40).share), '84.1');
+  for (const t of [23.4, 50, 59.3, 77]) assert.equal(H.bellMark(t).share, H.upperShare(t));
+});
+
+test('山の図: 印の位置は山の上（頂点 50 が 1）、20 未満・80 超えは端に', () => {
+  const m = H.bellMark(60);
+  assert.equal(m.x, 60);
+  close(m.h, Math.exp(-0.5), 1e-12);
+  assert.equal(m.edge, null);
+  assert.equal(H.bellMark(50).h, 1);
+  close(H.bellHeight(40), H.bellHeight(60), 1e-12);
+  const hi = H.bellMark(85.2);
+  assert.deepEqual([hi.x, hi.edge], [80, 'high']);
+  assert.equal(hi.share, H.upperShare(85.2));   // 数は端に寄せない（画面の上位の割合のまま）
+  const lo = H.bellMark(12);
+  assert.deepEqual([lo.x, lo.edge], [20, 'low']);
+  assert.equal(H.bellMark(80).edge, null);
+  assert.equal(H.bellMark(20).edge, null);
+  assert.equal(H.bellMark(null), null);
+  assert.deepEqual(H.BELL.ticks, [30, 40, 50, 60, 70]);
+});
