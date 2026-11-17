@@ -176,6 +176,14 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
 .calc-list .name { display: block; font-weight: 800; color: var(--accent); }
 .calc-list .desc { display: block; font-size: var(--fs-s); color: var(--muted); margin-top: var(--sp-1); }
 
+/* 偏差値の結果の下の山の図（hensachi）。印は縦の線と形（丸・端は三角）で、色だけにしない */
+.bell svg { width: 100%; height: auto; display: block; margin: var(--sp-2) 0; }
+.bell .bell-line { fill: none; stroke: var(--text); stroke-width: 3; }
+.bell .bell-area { fill: var(--accent); fill-opacity: 0.22; }
+.bell .bell-axis, .bell .bell-tick { stroke: var(--muted); stroke-width: 2; }
+.bell .bell-num { fill: var(--muted); font-size: 22px; }
+.bell .bell-you { stroke: var(--accent); stroke-width: 4; }
+.bell .bell-dot { fill: var(--accent); stroke: var(--card); stroke-width: 3; }
 .steps { width: 100%; border-collapse: collapse; }
 .steps th, .steps td { border-bottom: 1px solid var(--border); padding: var(--sp-2) var(--sp-1); vertical-align: top; text-align: left; }
 .steps td { text-align: right; white-space: nowrap; }
