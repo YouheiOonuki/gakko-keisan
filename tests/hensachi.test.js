@@ -88,3 +88,55 @@ test('山の図: 印の位置は山の上（頂点 50 が 1）、20 未満・80 
   assert.equal(H.bellMark(null), null);
   assert.deepEqual(H.BELL.ticks, [30, 40, 50, 60, 70]);
 });
+
+// 山の図の上で自分の位置を動かす（Q-428）。印の位置 → 点数は bellScoreAt（scoreFor）、点数 → 印の位置は hensachi と bellFrac
+const back = (s, m, sd) => H.bellScoreAt(H.bellFrac(H.hensachi(s, m, sd)), m, sd);   // 点数の印の位置から、点数へ戻す
+test('山の印: 印の位置 = 点数の欄の値（範囲の中の整数はどれも戻る。平均 58・標準偏差 15）', () => {
+  const r = H.bellScoreRange(58, 15);
+  assert.deepEqual(r, { min: 13, max: 103 });   // 偏差値 20 = 13 点、80 = 103 点
+  for (let s = r.min; s <= r.max; s++) assert.equal(back(s, 58, 15), s);
+  assert.equal(H.bellFrac(H.hensachi(13, 58, 15)), 0);
+  assert.equal(H.bellFrac(H.hensachi(103, 58, 15)), 1);
+  assert.equal(H.bellFrac(H.hensachi(58, 58, 15)), 0.5);
+});
+
+test('山の印: 端（図の外へは出ない）と 0 点（0 未満にならない）', () => {
+  assert.equal(H.bellScoreAt(-0.3, 58, 15), 13);
+  assert.equal(H.bellScoreAt(1.4, 58, 15), 103);
+  // 平均 30・標準偏差 20 では偏差値 20 が −30 点。左端は 0 点まで
+  assert.deepEqual(H.bellScoreRange(30, 20), { min: 0, max: 90 });
+  assert.equal(H.bellScoreAt(0, 30, 20), 0);
+  assert.equal(H.bellStep(0, -1, 30, 20), 0);
+  assert.equal(H.bellStep(2, -5, 30, 20), 0);
+  assert.equal(back(0, 30, 20), 0);
+  // 範囲の外の点数（図の端の三角）から動かすと、範囲の端へ
+  assert.equal(H.bellStep(120, -1, 58, 15), 103);
+  assert.equal(H.bellStep(5, 1, 58, 15), 13);
+  assert.equal(H.bellStep(103, 5, 58, 15), 103);
+  // 0 点以上に整数が無い（右端も 0 未満）なら動かさない
+  assert.equal(H.bellScoreRange(-50, 1), null);
+  assert.equal(H.bellScoreAt(0.5, -50, 1), null);
+});
+
+test('山の印: 標準偏差が小さい（0.5）・平均が小数でも、印の位置 = 点数', () => {
+  assert.deepEqual(H.bellScoreRange(50, 0.5), { min: 49, max: 51 });   // 偏差値 20〜80 は 48.5〜51.5 点
+  for (const s of [49, 50, 51]) assert.equal(back(s, 50, 0.5), s);
+  assert.equal(H.bellStep(50, 1, 50, 0.5), 51);
+  assert.equal(H.bellStep(51, 1, 50, 0.5), 51);
+  assert.deepEqual(H.bellScoreRange(50.5, 0.1), null);   // 50.2〜50.8 点に整数が無い
+  const r = H.bellScoreRange(61.7, 9.3);
+  for (let s = r.min; s <= r.max; s++) assert.equal(back(s, 61.7, 9.3), s);
+  assert.equal(H.bellScoreRange(58, 0), null);
+  assert.equal(H.bellScoreRange('', 15), null);
+});
+
+test('山の印: 小数の点数は、動かした後は整数（← → で 1 点、Shift で 5 点）', () => {
+  assert.equal(H.bellStep(72.4, 1, 58, 15), 73);
+  assert.equal(H.bellStep(72.4, -1, 58, 15), 72);
+  assert.equal(H.bellStep(72.4, 5, 58, 15), 77);
+  assert.equal(H.bellStep(72.4, -5, 58, 15), 68);
+  assert.equal(H.bellStep(72, 1, 58, 15), 73);
+  assert.equal(H.bellStep(72, -5, 58, 15), 67);
+  assert.ok(Number.isInteger(H.bellScoreAt(0.613, 58, 15)));
+  assert.equal(H.bellStep('', 1, 58, 15), null);
+});
