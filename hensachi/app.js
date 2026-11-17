@@ -36,7 +36,7 @@
 
   function f1(x) { return (Math.round(x * 10) / 10).toFixed(1); }
   function f2(x) { return (Math.round(x * 100) / 100).toLocaleString('ja-JP', { maximumFractionDigits: 2 }); }
-  function pct(p) { return p >= 0.1 ? f1(p * 100) : p >= 0.001 ? (Math.round(p * 1000) / 10).toString() : '0.1 未満'; }
+  function pct(p) { return p > 0.999 ? '99.9% 超' : p >= 0.1 ? f1(p * 100) + '%' : p >= 0.001 ? (Math.round(p * 1000) / 10) + '%' : '0.1% 未満'; }   // % まで付けて返す（前は「0.1 未満%」「100.0%」と出た。11-18）
   function row(th, td, rule) { return '<tr><th>' + th + (rule ? '<span class="rule">' + rule + '</span>' : '') + '</th><td>' + td + '</td></tr>'; }
   var bar = window.YorozuScreen.fixedBar({ bar: 'fixbar', watch: 'result-main', jump: 'result-card', text: 'fixbar-text' });
   var lastStats = null;
@@ -58,7 +58,7 @@
     var svg = document.createElementNS(SVGNS, 'svg');
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + HGT);
     svg.setAttribute('role', 'img');
-    svg.setAttribute('aria-label', '偏差値の山（正規分布）' + (m ? '。偏差値 ' + f1(t) + '、上位 約 ' + pct(m.share) + '%' : ''));
+    svg.setAttribute('aria-label', '偏差値の山（正規分布）' + (m ? '。偏差値 ' + f1(t) + '、上位 約 ' + pct(m.share) : ''));
     function el(name, attrs, text) {
       var e = document.createElementNS(SVGNS, name);
       Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
@@ -99,13 +99,13 @@
     } else {
       var up = mark.share;
       $('r-big').textContent = f1(t);
-      $('r-sub').textContent = '上位 約 ' + pct(up) + '%（正規分布の仮定）';
+      $('r-sub').textContent = '上位 約 ' + pct(up) + '（正規分布の仮定）';
       bar.set('偏差値 ' + f1(t));
       rows.push(row('計算', '50 ＋ 10 × (' + f2(Number(d.score)) + ' − ' + f2(Number(d.mean)) + ') ÷ ' + f2(Number(d.sd))));
       var n = Math.floor(Number(d.n));
       if (d.n !== '' && n >= 1) {
         var rk = H.rankEstimate(t, n);
-        rows.push(row('順位の目安', n + ' 人中 約 ' + rk + ' 位', '上位 ' + pct(up) + '% × ' + n + ' 人 ＋ 1'));
+        rows.push(row('順位の目安', n + ' 人中 約 ' + rk + ' 位', '上位 ' + pct(up) + ' × ' + n + ' 人 ＋ 1'));
         nState = n + ' 人・約 ' + rk + ' 位';
       }
       [60, 65, 70].forEach(function (x) {
@@ -130,7 +130,7 @@
     // 順位から
     var fr = H.fromRank(d.rk, d.rn), rankState = '入力なし';
     if (fr !== null) {
-      $('rank-out').textContent = d.rn + ' 人中 ' + Math.floor(d.rk) + ' 位は、偏差値 約 ' + f1(fr) + '（上位 ' + pct((Math.floor(d.rk) - 0.5) / Math.floor(d.rn)) + '% の位置。正規分布の仮定）';
+      $('rank-out').textContent = d.rn + ' 人中 ' + Math.floor(d.rk) + ' 位は、偏差値 約 ' + f1(fr) + '（上位 ' + pct((Math.floor(d.rk) - 0.5) / Math.floor(d.rn)) + ' の位置。正規分布の仮定）';
       rankState = '約 ' + f1(fr);
     } else {
       $('rank-out').textContent = d.rk !== '' && d.rn !== '' ? '順位は 1 から人数までで入れてください。' : '';
