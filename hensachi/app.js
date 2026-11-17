@@ -54,7 +54,6 @@
   }
   function renderBell(t, m) {
     var box = $('bell');
-    box.textContent = '';
     var svg = document.createElementNS(SVGNS, 'svg');
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + HGT);
     svg.setAttribute('role', 'img');
@@ -82,8 +81,56 @@
         el('circle', { class: 'bell-dot', cx: x, cy: y.toFixed(1), r: 9 });
       }
     }
-    box.appendChild(svg);
+    // 印のボタン（#bell-mark）は残し、svg だけを差し替える（引いているボタンを作り直さない）
+    var old = box.querySelector('svg');
+    if (old) box.replaceChild(svg, old); else box.insertBefore(svg, box.firstChild);
+    placeMark(m);
   }
+
+  // --- 山の図の印（Q-428）: 左右に引く・← → で 1 点（Shift で 5 点）、自分の点数の欄を書き換える ---
+  // 印の位置から点数へは H.bellScoreAt（scoreFor）、点数から偏差値へは H.hensachi（update の中）。平均点・標準偏差は変えない
+  var markBtn = document.createElement('button');
+  markBtn.type = 'button';
+  markBtn.className = 'bell-mark';
+  markBtn.id = 'bell-mark';
+  markBtn.hidden = true;
+  markBtn.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight Shift+ArrowLeft Shift+ArrowRight');
+  $('bell').appendChild(markBtn);
+  function placeMark(m) {
+    markBtn.hidden = !m;
+    if (!m) return;
+    var y = m.edge ? BASE - 14 : sy(m.h);
+    markBtn.style.left = (sx(m.x) / W * 100) + '%';
+    markBtn.style.top = (y / HGT * 100) + '%';
+    markBtn.setAttribute('aria-label', '自分の点数 ' + $('score').value + ' 点');
+  }
+  function setScore(x) {
+    if (x === null || String(x) === $('score').value) return;
+    $('score').value = String(x);
+    update();
+  }
+  markBtn.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    var step = (e.shiftKey ? 5 : 1) * (e.key === 'ArrowRight' ? 1 : -1);
+    setScore(H.bellStep($('score').value, step, $('mean').value, $('sd').value));
+  });
+  var drag = null;
+  markBtn.addEventListener('pointerdown', function (e) {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    markBtn.focus();
+    markBtn.setPointerCapture(e.pointerId);
+    drag = { id: e.pointerId, rect: $('bell').querySelector('svg').getBoundingClientRect() };
+  });
+  markBtn.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var px = (e.clientX - drag.rect.left) / drag.rect.width * W;
+    setScore(H.bellScoreAt((px - L) / (W - L - R), $('mean').value, $('sd').value));
+  });
+  function dragEnd(e) { if (drag && e.pointerId === drag.id) drag = null; }
+  markBtn.addEventListener('pointerup', dragEnd);
+  markBtn.addEventListener('pointercancel', dragEnd);
 
   function update() {
     var d = current();

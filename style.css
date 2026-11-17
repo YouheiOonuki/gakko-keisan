@@ -177,13 +177,22 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
 .calc-list .desc { display: block; font-size: var(--fs-s); color: var(--muted); margin-top: var(--sp-1); }
 
 /* 偏差値の結果の下の山の図（hensachi）。印は縦の線と形（丸・端は三角）で、色だけにしない */
-.bell svg { width: 100%; height: auto; display: block; margin: var(--sp-2) 0; }
+.bell { position: relative; margin: var(--sp-2) 0; }
+.bell svg { width: 100%; height: auto; display: block; margin: 0; }
 .bell .bell-line { fill: none; stroke: var(--text); stroke-width: 3; }
 .bell .bell-area { fill: var(--accent); fill-opacity: 0.22; }
 .bell .bell-axis, .bell .bell-tick { stroke: var(--muted); stroke-width: 2; }
 .bell .bell-num { fill: var(--muted); font-size: 22px; }
 .bell .bell-you { stroke: var(--accent); stroke-width: 4; }
 .bell .bell-dot { fill: var(--accent); stroke: var(--card); stroke-width: 3; }
+/* 山の図の印（Q-428）: 図の丸・三角の上に重ねる透明のボタン。当たりは 44px。左右に引く・← → で自分の点数が変わる */
+.bell .bell-mark {
+  position: absolute; width: var(--tap); height: var(--tap); min-height: var(--tap); padding: 0; margin: 0;
+  transform: translate(-50%, -50%); background: none; border: 2px solid transparent; border-radius: 50%;
+  touch-action: none; cursor: ew-resize;
+}
+.bell .bell-mark:hover, .bell .bell-mark:active { border-color: var(--accent); }
+@media print { .bell .bell-mark { display: none; } }
 /* 出席の結果の下の升目（shusseki）。升は授業 1 回。柄で分ける（べた・斜めの線・ふちだけ・×）。色だけにしない */
 .masu svg { display: block; width: 100%; max-width: 176px; height: auto; margin: var(--sp-2) 0; }
 .masu .m-box { fill: none; stroke: var(--text); stroke-width: 1.5; }
