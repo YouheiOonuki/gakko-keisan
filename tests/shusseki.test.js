@@ -67,3 +67,52 @@ test('単位数から回数、科目の一覧は残りの少ない順', () => {
   ], S.ratioOf('2/3'));
   assert.deepEqual(t.map(x => [x.name, x.r.remain]), [['体育', 3], ['科目3', 10], ['数学Ⅰ', 25]]);
 });
+
+// 結果の下の升目（Q-408）。升の数と柄ごとの数は limit の返り値から
+const sum = (g) => g.absent + g.remain + g.rest + g.over;
+test('升目: 升の数 = 授業の回数、柄ごとの数 = limit の数（3分の2・4分の3・8割）', () => {
+  for (const [id, allowed] of [['2/3', 23], ['3/4', 17], ['4/5', 14]]) {
+    const l = S.limit({ total: 70, absent: 10, ratio: S.ratioOf(id) });
+    const g = S.grid(l);
+    assert.equal(l.allowed, allowed);
+    assert.equal(g.size, 70);
+    assert.equal(sum(g), 70);
+    assert.deepEqual([g.absent, g.remain, g.rest, g.over], [l.absent, l.remain, l.need, 0]);
+  }
+});
+
+test('升目: 回数 1・休める上限ちょうど・上限を超える・休んだ回数が授業の回数より多い', () => {
+  const one = S.grid(S.limit({ total: 1, ratio: S.ratioOf('2/3') }));
+  assert.deepEqual(one, { size: 1, absent: 0, remain: 0, rest: 1, over: 0 });
+  const just = S.grid(S.limit({ total: 70, absent: 23, ratio: S.ratioOf('2/3') }));
+  assert.deepEqual(just, { size: 70, absent: 23, remain: 0, rest: 47, over: 0 });
+  const over = S.limit({ total: 70, absent: 30, ratio: S.ratioOf('2/3') });
+  assert.deepEqual(S.grid(over), { size: 70, absent: 23, remain: 0, rest: 40, over: -over.remain });
+  const all = S.grid(S.limit({ total: 70, absent: 99, ratio: S.ratioOf('2/3') }));
+  assert.deepEqual(all, { size: 70, absent: 23, remain: 0, rest: 0, over: 47 });
+});
+
+test('升目: 欠席に数えない回数は今の計算のとおり升から引く。空・0・400 超えは出さない', () => {
+  const l = S.limit({ total: 70, absent: 5, excused: 4, ratio: S.ratioOf('2/3') });
+  const g = S.grid(l);
+  assert.equal(g.size, l.base);
+  assert.equal(g.size, 66);
+  assert.equal(sum(g), 66);
+  assert.equal(g.remain, l.remain);
+  assert.equal(S.grid(null), null);
+  assert.equal(S.grid(S.limit({ total: '', ratio: S.ratioOf('2/3') })), null);
+  assert.equal(S.grid(S.limit({ total: 5, excused: 5, ratio: S.ratioOf('2/3') })), null);
+  assert.equal(S.grid(S.limit({ total: 400, ratio: S.ratioOf('2/3') })).size, 400);
+  assert.equal(S.grid(S.limit({ total: 401, ratio: S.ratioOf('2/3') })), null);
+  assert.equal(S.GRID_MAX, 400);
+});
+
+test('升目: 1〜120 回・休んだ 0〜回数＋2 の全部で、升の合計 = 回数、あと休める升 = 残り', () => {
+  for (const id of ['2/3', '3/4', '4/5']) for (let n = 1; n <= 120; n++) for (let a = 0; a <= n + 2; a++) {
+    const l = S.limit({ total: n, absent: a, ratio: S.ratioOf(id) });
+    const g = S.grid(l);
+    assert.equal(sum(g), n);
+    assert.equal(g.remain, Math.max(0, l.remain));
+    assert.equal(g.absent + g.over, Math.min(a, n));
+  }
+});

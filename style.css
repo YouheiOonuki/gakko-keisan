@@ -184,6 +184,12 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
 .bell .bell-num { fill: var(--muted); font-size: 22px; }
 .bell .bell-you { stroke: var(--accent); stroke-width: 4; }
 .bell .bell-dot { fill: var(--accent); stroke: var(--card); stroke-width: 3; }
+/* 出席の結果の下の升目（shusseki）。升は授業 1 回。柄で分ける（べた・斜めの線・ふちだけ・×）。色だけにしない */
+.masu svg { display: block; width: 100%; max-width: 176px; height: auto; margin: var(--sp-2) 0; }
+.masu .m-box { fill: none; stroke: var(--text); stroke-width: 1.5; }
+.masu .m-absent { fill: var(--text); stroke: var(--text); stroke-width: 1.5; }
+.masu .m-line { stroke: var(--text); stroke-width: 1.5; }
+.masu .btn-row .btn { min-height: var(--tap); }
 .steps { width: 100%; border-collapse: collapse; }
 .steps th, .steps td { border-bottom: 1px solid var(--border); padding: var(--sp-2) var(--sp-1); vertical-align: top; text-align: left; }
 .steps td { text-align: right; white-space: nowrap; }

@@ -57,6 +57,46 @@
   }
   var bar = window.YorozuScreen.fixedBar({ bar: 'fixbar', watch: 'result-main', jump: 'result-card', text: 'fixbar-text' });
 
+  // --- 結果の下の升目（升は授業 1 回）。数は S.grid（limit の返り値から分けるだけ） ---
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var CELL = 14, GAP = 4, COLS = 10;
+  function renderGrid(g, label) {
+    var box = $('masu-svg');
+    box.textContent = '';
+    $('masu').hidden = !g;
+    if (!g) return;
+    var rows = Math.ceil(g.size / COLS), W = COLS * CELL + (COLS - 1) * GAP, H = rows * CELL + (rows - 1) * GAP;
+    var svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', label);
+    function el(name, attrs) {
+      var e = document.createElementNS(SVGNS, name);
+      Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+      svg.appendChild(e); return e;
+    }
+    // 並び: 休んだ → 上限を超えた → あと休める → 残り（over と remain は同時に 0 より大きくならない）
+    var kinds = [['absent', g.absent], ['over', g.over], ['remain', g.remain], ['rest', g.rest]], n = 0;
+    kinds.forEach(function (k) {
+      for (var j = 0; j < k[1]; j++, n++) {
+        var x = (n % COLS) * (CELL + GAP) + 0.75, y = Math.floor(n / COLS) * (CELL + GAP) + 0.75, s = CELL - 1.5;
+        el('rect', { class: k[0] === 'absent' ? 'm-absent' : 'm-box', x: x, y: y, width: s, height: s, 'data-kind': k[0] });
+        if (k[0] === 'remain' || k[0] === 'over') el('line', { class: 'm-line', x1: x, y1: y + s, x2: x + s, y2: y });
+        if (k[0] === 'over') el('line', { class: 'm-line', x1: x, y1: y, x2: x + s, y2: y + s });
+      }
+    });
+    box.appendChild(svg);
+  }
+  var lastL = null;
+  function step(dx) {
+    if (!lastL) return;
+    var a = Math.min(lastL.base, Math.max(0, lastL.absent + dx));
+    $('absent').value = String(a);
+    update();
+  }
+  $('masu-add').addEventListener('click', function () { step(1); });
+  $('masu-back').addEventListener('click', function () { step(-1); });
+
   function update() {
     var d = current();
     $('custom-row').hidden = d.ratio !== 'custom';
@@ -87,6 +127,10 @@
       rows.push(row(l.over ? '超えた回数' : '残り', (l.over ? -l.remain : l.remain) + ' 回', null, true));
     }
     $('r-table').tBodies[0].innerHTML = rows.join('');
+    lastL = l;
+    var g = S.grid(l);
+    renderGrid(g, $('r-big').textContent + ' ' + $('r-sub').textContent);
+    if (g) { $('masu-add').disabled = l.absent >= l.base; $('masu-back').disabled = l.absent <= 0; }
 
     // 単位数から
     var h = S.hoursFromUnits(d.units);
