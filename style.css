@@ -194,6 +194,23 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
 }
 .bell .bell-mark:hover, .bell .bell-mark:active { border-color: var(--accent); }
 @media print { .bell .bell-mark { display: none; } }
+/* 内申点の結果の下の線（naishin、Q-578）。横は学力検査の点、縦は合計の得点。目標は破線、交わる所は細い破線。色だけにしない */
+.gline { position: relative; margin: var(--sp-2) 0; }
+.gline svg { width: 100%; height: auto; display: block; margin: 0; }
+.gline .gl-line { fill: none; stroke: var(--text); stroke-width: 3; }
+.gline .gl-axis, .gline .gl-tick { stroke: var(--muted); stroke-width: 2; }
+.gline .gl-num { fill: var(--muted); font-size: 22px; }
+.gline .gl-target { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 10 6; }
+.gline .gl-need { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.gline .gl-dot { fill: var(--accent); stroke: var(--card); stroke-width: 3; }
+/* 線の上の印: 丸の上に重ねる透明のボタン。当たりは 44px。左右に引く・← → で学力検査の点が変わる */
+.gline .gl-mark {
+  position: absolute; width: var(--tap); height: var(--tap); min-height: var(--tap); padding: 0; margin: 0;
+  transform: translate(-50%, -50%); background: none; border: 2px solid transparent; border-radius: 50%;
+  touch-action: none; cursor: ew-resize;
+}
+.gline .gl-mark:hover, .gline .gl-mark:active { border-color: var(--accent); }
+@media print { .gline { display: none; } }
 /* 出席の結果の下の升目（shusseki）。升は授業 1 回。柄で分ける（べた・斜めの線・ふちだけ・×）。色だけにしない */
 .masu svg { display: block; width: 100%; max-width: 176px; height: auto; margin: var(--sp-2) 0; }
 .masu .m-box { fill: none; stroke: var(--text); stroke-width: 1.5; }

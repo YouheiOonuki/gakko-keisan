@@ -8,7 +8,7 @@
   "repository": "https://github.com/YouheiOonuki/gakko-keisan",
   "generated_from": "lib/naishin-values.js（式と値）・lib/naishin.js（計算例）を tools/build-data.mjs で書き出し",
   "checked": "2026-11-12",
-  "generated": "2026-11-12",
+  "generated": "2026-11-19",
   "source": [
     "https://www.kyoiku.metro.tokyo.lg.jp/information/press/2026/09/2026091703",
     "https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/20260916_r9_09",
@@ -297,6 +297,7 @@
         "jitsugiMul": 7.5,
         "aMax": 250,
         "cMul": 0.5,
+        "gakuMax": 500,
         "kasan": {
           "1": 25,
           "2": 20,
