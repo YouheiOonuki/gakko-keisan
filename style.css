@@ -120,8 +120,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   border-top: 1px solid var(--border);
   margin-top: var(--sp-2);
 }
-.footer-nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: 0 var(--sp-4); margin-bottom: var(--sp-2); }
-.footer-nav a { display: inline-flex; align-items: center; min-height: var(--tap); color: var(--muted); text-decoration: none; }
+.footer-nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); margin-bottom: var(--sp-2); }   /* 折り返した行の間 8px（Q-471） */
+.footer-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); color: var(--muted); text-decoration: none; }
 .footer-nav a:hover, .footer-nav a[aria-current="page"] { color: var(--accent); }
 
 /* ===========================
@@ -145,6 +145,7 @@ fieldset.card { min-width: 0; }
 details.card.opt { padding-block: 0; margin-bottom: var(--sp-3); }
 details.card.opt[open] { padding-bottom: var(--sp-4); }
 details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: var(--sp-4); }
+.content details[open] > summary { margin-bottom: var(--sp-2); }   /* 開いた中の最初のリンクとの間 8px（Q-471） */
 .opt-state { font-weight: 400; }
 .btn-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-3) 0; }   /* ボタンの間隔（SCREEN.md 5 章。4 章の上下 12px 以上は margin で） */
 
@@ -213,7 +214,8 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
 .field .row input[type="number"] { max-width: 9rem; text-align: right; }
 .field.is-missing input, .field.is-missing select { border-color: var(--accent); background: var(--accent-soft); }
 label.inline { display: flex; align-items: center; gap: var(--sp-2); font-weight: 400; min-height: var(--tap); }
-label.inline input { width: 1.15rem; height: 1.15rem; accent-color: var(--accent); flex: none; }
+label.inline input { width: var(--tap); height: var(--tap); margin: 0; accent-color: var(--accent); flex: none; }   /* 押す所は 44px 以上（Q-471） */
+:not(.opts) > label.inline + label.inline { margin-top: var(--sp-2); }   /* 縦に並んだ選ぶ所の間 8px（横に並ぶ .opts は行の間で取る。Q-471） */
 textarea { width: 100%; }
 
 /* 評定のタイル（教科ごとに 1〜5 を 1 タップで選ぶ）。入れ子の fieldset は選択肢だけなので measure_fold は 1 つと数える */
@@ -224,9 +226,9 @@ fieldset.grades > legend { font-weight: 700; margin-bottom: var(--sp-1); }
 .grade-row + .grade-row { border-top: 1px solid var(--border); }
 .grade-row .subj { flex: 0 0 5.4em; font-size: var(--fs-s); }
 .grade-row .subj small { display: block; font-size: var(--fs-s); color: var(--muted); line-height: var(--lh-tight); }
-.tiles { display: flex; gap: var(--sp-1); }
+.tiles { display: flex; gap: var(--sp-2); }   /* 評定の升の間 8px（Q-471） */
 .tiles label { position: relative; }
-.tiles input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tiles input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }   /* 見えない丸が升ごと覆い、押す所を升と同じ 44px に（Q-471） */
 .tiles span {
   display: inline-flex; align-items: center; justify-content: center; width: var(--tap); height: var(--tap);
   border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card); font-weight: 700; cursor: pointer;
@@ -238,13 +240,13 @@ fieldset.grades > legend { font-weight: 700; margin-bottom: var(--sp-1); }
 
 /* 行を足す入力（科目の一覧） */
 .rows { display: grid; gap: var(--sp-2); margin: var(--sp-2) 0; }
-.rows .r { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) var(--tap); gap: var(--sp-1); align-items: end; }
+.rows .r { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) var(--tap); gap: var(--sp-2); align-items: end; }   /* 横に並ぶ欄の間 8px（Q-471） */
 .rows .r label { font-size: var(--fs-s); color: var(--muted); display: block; }
 .rows .r input { width: 100%; padding-inline: var(--sp-2); }
 .rows .r button { height: var(--tap); color: var(--muted); }
 
 .content .steps td { white-space: normal; text-align: left; }
-.five th, .five td { text-align: center; padding: var(--sp-1) 0; }
+.five th, .five td { text-align: center; padding: var(--sp-1); }   /* 横に並ぶ欄の間 8px（Q-471） */
 .five input { width: 4.2em; padding-inline: var(--sp-1); text-align: right; }
 .five td:last-child { font-weight: 800; color: var(--accent); }
 

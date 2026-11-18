@@ -8,7 +8,7 @@
 /* 分のボタン */
 .t-presets { border: none; min-width: 0; margin: 0 0 0.4rem; }
 .t-presets legend { font-weight: 700; margin: 0 auto var(--sp-1); }
-.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-1); }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2); }   /* 分の札の間 8px（Q-471） */
 /* 分のボタン（JS が作るので class は付けられない。.chip と同じ形） */
 .chips button { min-width: var(--tap); padding: 0 var(--sp-2); }
 .chips button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
@@ -52,4 +52,4 @@
   @keyframes t-done { 50% { transform: scale(1.04); } }
 }
 
-.opts { display: flex; flex-wrap: wrap; column-gap: var(--sp-6); }
+.opts { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); }   /* 折り返した行の間 8px（Q-471） */
