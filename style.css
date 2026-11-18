@@ -214,7 +214,7 @@ details.card.opt[open] > summary { border-bottom: 1px solid var(--border); margi
 .field .row input[type="number"] { max-width: 9rem; text-align: right; }
 .field.is-missing input, .field.is-missing select { border-color: var(--accent); background: var(--accent-soft); }
 label.inline { display: flex; align-items: center; gap: var(--sp-2); font-weight: 400; min-height: var(--tap); }
-label.inline input { width: var(--tap); height: var(--tap); margin: 0; accent-color: var(--accent); flex: none; }   /* 押す所は 44px 以上（Q-471） */
+label.inline input { width: 1.15rem; height: 1.15rem; accent-color: var(--accent); flex: none; }
 :not(.opts) > label.inline + label.inline { margin-top: var(--sp-2); }   /* 縦に並んだ選ぶ所の間 8px（横に並ぶ .opts は行の間で取る。Q-471） */
 textarea { width: 100%; }
 
@@ -228,7 +228,7 @@ fieldset.grades > legend { font-weight: 700; margin-bottom: var(--sp-1); }
 .grade-row .subj small { display: block; font-size: var(--fs-s); color: var(--muted); line-height: var(--lh-tight); }
 .tiles { display: flex; gap: var(--sp-2); }   /* 評定の升の間 8px（Q-471） */
 .tiles label { position: relative; }
-.tiles input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }   /* 見えない丸が升ごと覆い、押す所を升と同じ 44px に（Q-471） */
+.tiles input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .tiles span {
   display: inline-flex; align-items: center; justify-content: center; width: var(--tap); height: var(--tap);
   border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card); font-weight: 700; cursor: pointer;
