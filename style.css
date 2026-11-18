@@ -263,5 +263,7 @@ details.card.opt.about-tool > summary { white-space: normal; }   /* 長い summa
 details.about-tool h3 { margin: var(--sp-4) 0 var(--sp-1); }
 details.about-tool ul { padding-left: 1.2rem; margin: var(--sp-1) 0 var(--sp-2); }
 
-/* 1 行に 1 つのリンク（使い方への行・案内のカード・出典の一覧）も押せる高さに（DESIGN の 44px。K192 段 3 の 4 の検収） */
-:where(html:not([data-skin="base"])) :where(p, li) > a:only-child { display: inline-flex; align-items: center; min-height: var(--tap); }
+/* 1 行に 1 つのリンク（使い方への行・入口の一覧）も押せる高さに（DESIGN の 44px。K192 段 3 の 4 の検収）。
+   箱を名指しする: 裸の :where(p, li) は文中の唯一のリンク（出典の一覧・結果の「根拠」）にも当たり、文中のリンクでなくしていた（Q-518）。
+   案内のカード（p.card）とフッターの一覧は共通の枠と .footer-nav a が 44px にしている */
+:where(html:not([data-skin="base"])) :where(.calc-list li, .link-row) > a:only-child { display: inline-flex; align-items: center; min-height: var(--tap); }
