@@ -157,6 +157,107 @@
     $('g1').classList.toggle('is-missing', THREE.indexOf(pref) >= 0 && $('sum1').value === '' && full);
   }
 
+  // calc に渡す入力（都府県ごと）。結果と線（N.examLine）で同じものを使う
+  function calcInput(pref, d) {
+    return pref === 'tokyo' ? { g: d.g3, kyoka: d.tokyo.kyoka, ratio: d.tokyo.ratio, gaku: d.tokyo.gaku, esat: d.tokyo.esat, target: tgt.tokyo }
+      : pref === 'kanagawa' ? { sum2: d.sum2, g3: d.g3, f: d.kanagawa.f, gaku: d.kanagawa.gaku, gakuMax: d.kanagawa.gakuMax, target: tgt.kanagawa }
+        : pref === 'osaka' ? { sum1: d.sum1, sum2: d.sum2, g3: d.g3, type: d.osaka.type, gaku: d.osaka.gaku, target: tgt.osaka }
+          : pref === 'saitama' ? { sum1: d.sum1, sum2: d.sum2, g3: d.g3, ratio: d.saitama.ratio, conv: d.saitama.conv, gaku: d.saitama.gaku, mensetsu: d.saitama.mensetsu, mmul: d.saitama.mmul, target: tgt.saitama }
+            : pref === 'chiba' ? { sum1: d.sum1, sum2: d.sum2, g3: d.g3, k: d.chiba.k, gaku: d.chiba.gaku, target: tgt.chiba }
+              : { g: d.g3, gaku: d.hyogo.gaku, gakku: d.hyogo.gakku, target: tgt.hyogo };
+  }
+
+  // --- 結果の下の線（Q-578）: 横は学力検査の点、縦は合計の得点。線の点と満点は N.examLine（calc を呼ぶ） ---
+  var GAKU_ID = { tokyo: 't-gaku', kanagawa: 'k-gaku', hyogo: 'h-gaku', osaka: 'o-gaku', saitama: 's-gaku', chiba: 'c-gaku' };
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  // 左は縦の目盛りの字（「1000点」）、下は横の目盛りの字。印のフォーカスの輪（44px ＋ 外。390 幅で約 48）が下の字にかからない所まで離す
+  var W = 600, GL = 112, GR = 44, TOP = 30, BASE = 300, NUM_Y = BASE + 46, HGT = NUM_Y + 8;
+  var line = null;   // いま描いている線（N.examLine の返り）
+  function gx(x) { return GL + x / line.gakuMax * (W - GL - GR); }
+  function gy(y) { return BASE - Math.min(1, Math.max(0, y / line.totalMax)) * (BASE - TOP); }
+  function pt(v) { return (Math.round(v * 10) / 10).toLocaleString('ja-JP', { maximumFractionDigits: 1, useGrouping: false }); }
+
+  // 線の上の印: 左右に引く・← → で 1 点（Shift で 10 点）。今の都府県の学力検査の欄を書き換え、欄を手で直したのと同じ update の道で出し直す
+  var markBtn = document.createElement('button');
+  markBtn.type = 'button';
+  markBtn.className = 'gl-mark';
+  markBtn.id = 'gaku-mark';
+  markBtn.hidden = true;
+  markBtn.setAttribute('aria-keyshortcuts', 'ArrowLeft ArrowRight Shift+ArrowLeft Shift+ArrowRight');
+  $('gaku-line').appendChild(markBtn);
+
+  function renderLine(l) {
+    var box = $('gaku-line');
+    line = l;
+    box.hidden = !l;
+    markBtn.hidden = !l;
+    if (!l) return;
+    var svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + HGT);
+    svg.setAttribute('aria-hidden', 'true');
+    function el(name, attrs, text) {
+      var e = document.createElementNS(SVGNS, name);
+      Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+      if (text !== undefined) e.textContent = text;
+      svg.appendChild(e); return e;
+    }
+    el('line', { class: 'gl-axis', x1: GL, y1: BASE, x2: W - GR, y2: BASE });
+    el('line', { class: 'gl-axis', x1: GL, y1: BASE, x2: GL, y2: TOP });
+    [0, l.gakuMax / 2, l.gakuMax].forEach(function (k, i) {
+      el('line', { class: 'gl-tick', x1: gx(k), y1: BASE, x2: gx(k), y2: BASE + 8 });
+      el('text', { class: 'gl-num', x: gx(k), y: NUM_Y, 'text-anchor': 'middle' }, pt(k) + (i === 2 ? '点' : ''));
+    });
+    // 縦の 0 は横の 0 と同じ角なので字を置かない（左下の角に来た印の輪が字にかからない）
+    el('line', { class: 'gl-tick', x1: GL - 8, y1: BASE, x2: GL, y2: BASE });
+    el('line', { class: 'gl-tick', x1: GL - 8, y1: TOP, x2: GL, y2: TOP });
+    el('text', { class: 'gl-num', x: GL - 14, y: TOP + 8, 'text-anchor': 'end' }, pt(l.totalMax) + '点');
+    // 目標（入れた数をそのまま）: その高さに横の線。線と交わる所（need.raw）に縦の細い線。満点でも届かない（over）なら縦の線は出さない
+    // 目標の字は左の端に。線の左の端が目標より下なら横の線の上、上なら下（線に重ねない）
+    var n = l.need;
+    if (n && n.target <= l.totalMax) {
+      el('line', { class: 'gl-target', x1: GL, y1: gy(n.target), x2: W - GR, y2: gy(n.target) });
+      el('text', { class: 'gl-num', x: GL + 10, y: gy(n.target) + (l.points[0].y < n.target ? -10 : 28) }, pt(n.target) + '点');
+      if (!n.over) el('line', { class: 'gl-need', x1: gx(n.raw), y1: BASE, x2: gx(n.raw), y2: gy(n.target) });
+    }
+    el('path', { class: 'gl-line', d: 'M' + l.points.map(function (p) { return gx(p.x).toFixed(1) + ' ' + gy(p.y).toFixed(1); }).join(' L') });
+    el('circle', { class: 'gl-dot', cx: gx(l.x).toFixed(1), cy: gy(l.y).toFixed(1), r: 9 });
+    // 印のボタンは残し、svg だけを差し替える（引いているボタンを作り直さない）
+    var old = box.querySelector('svg');
+    if (old) box.replaceChild(svg, old); else box.insertBefore(svg, box.firstChild);
+    markBtn.style.left = (gx(l.x) / W * 100) + '%';
+    markBtn.style.top = (gy(l.y) / HGT * 100) + '%';
+    markBtn.setAttribute('aria-label', '学力検査 ' + pt(l.x) + ' 点、合計 ' + pt(l.y) + ' 点');
+  }
+
+  function setGaku(x) {
+    var f = $(GAKU_ID[$('pref').value]);
+    if (x === null || String(x) === f.value) return;
+    f.value = String(x);
+    update();
+  }
+  markBtn.addEventListener('keydown', function (e) {
+    if (!line || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+    e.preventDefault();
+    var step = (e.shiftKey ? N.LINE_KEYS.big : N.LINE_KEYS.small) * (e.key === 'ArrowRight' ? 1 : -1);
+    setGaku(N.gakuStep($(GAKU_ID[$('pref').value]).value, step, line.gakuMax));
+  });
+  var drag = null;
+  markBtn.addEventListener('pointerdown', function (e) {
+    if (e.button !== 0 || !line) return;
+    e.preventDefault();
+    markBtn.focus();
+    markBtn.setPointerCapture(e.pointerId);
+    drag = { id: e.pointerId, rect: $('gaku-line').querySelector('svg').getBoundingClientRect() };
+  });
+  markBtn.addEventListener('pointermove', function (e) {
+    if (!drag || e.pointerId !== drag.id || !line) return;
+    var px = (e.clientX - drag.rect.left) / drag.rect.width * W;
+    setGaku(N.gakuAt((px - GL) / (W - GL - GR), line.gakuMax));
+  });
+  function dragEnd(e) { if (drag && e.pointerId === drag.id) drag = null; }
+  markBtn.addEventListener('pointerup', dragEnd);
+  markBtn.addEventListener('pointercancel', dragEnd);
+
   function update() {
     var pref = $('pref').value;
     // 都府県を切り替えたら、その都府県の目標点を欄に戻す（満点が違うので持ち越さない）
@@ -166,12 +267,8 @@
     layout(pref);
     markMissing(pref);
     var P = V.PREFS[pref];
-    var r = pref === 'tokyo' ? N.tokyo({ g: d.g3, kyoka: d.tokyo.kyoka, ratio: d.tokyo.ratio, gaku: d.tokyo.gaku, esat: d.tokyo.esat, target: tgt.tokyo })
-      : pref === 'kanagawa' ? N.kanagawa({ sum2: d.sum2, g3: d.g3, f: d.kanagawa.f, gaku: d.kanagawa.gaku, gakuMax: d.kanagawa.gakuMax, target: tgt.kanagawa })
-        : pref === 'osaka' ? N.osaka({ sum1: d.sum1, sum2: d.sum2, g3: d.g3, type: d.osaka.type, gaku: d.osaka.gaku, target: tgt.osaka })
-          : pref === 'saitama' ? N.saitama({ sum1: d.sum1, sum2: d.sum2, g3: d.g3, ratio: d.saitama.ratio, conv: d.saitama.conv, gaku: d.saitama.gaku, mensetsu: d.saitama.mensetsu, mmul: d.saitama.mmul, target: tgt.saitama })
-            : pref === 'chiba' ? N.chiba({ sum1: d.sum1, sum2: d.sum2, g3: d.g3, k: d.chiba.k, gaku: d.chiba.gaku, target: tgt.chiba })
-              : N.hyogo({ g: d.g3, gaku: d.hyogo.gaku, gakku: d.hyogo.gakku, target: tgt.hyogo });
+    var input = calcInput(pref, d);
+    var r = N.calc(pref, input);
     var rows = [], lead, big, sub, barText, note = '', examState = '入力なし', needText = '';
 
     if (!r) {
@@ -309,6 +406,7 @@
     $('r-big').textContent = big;
     $('r-sub').textContent = sub;
     $('r-table').tBodies[0].innerHTML = rows.join('');
+    renderLine(r ? N.examLine(pref, input) : null);
     $('r-note').textContent = r ? note + (note ? ' ' : '') + (P.basis || P.year + 'の入試の要綱で計算しています。') : '';
     $('need').textContent = r ? needText : (tgt[pref] ? '評定を選ぶと出ます。' : '');
     bar.set(barText);

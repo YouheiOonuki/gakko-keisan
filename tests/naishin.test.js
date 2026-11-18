@@ -233,3 +233,104 @@ test('calc: 府県の id で振り分ける', () => {
   assert.equal(N.calc('chiba', Y).pref, 'chiba');
   assert.equal(N.calc('tokyo', { g: G(4, 4) }).pref, 'tokyo');
 });
+
+// --- 学力検査の点と合計の得点の線（Q-578）。線の点は calc を呼んだ数。縦は結果の合計の得点と同じ欄 ---
+const PREF6 = ['tokyo', 'kanagawa', 'hyogo', 'osaka', 'saitama', 'chiba'];
+const lineIn = (grade, gaku, more = {}) => {
+  const g = G(grade, grade);
+  return { g, g2: g, g3: g, sum1: grade * 9, sum2: grade * 9, gaku, ...more };
+};
+// 結果の画面が「合計の得点」として出している欄（app.js の表の太い行）
+const shownTotal = (pref, r) => ({ tokyo: r.exam && r.exam.best1000, kanagawa: r.exam && r.exam.S1, hyogo: r.exam && r.exam.withKasan }[pref] ?? r.exam.total);
+// 線（折れ線）の x での高さ
+const lineAt = (l, x) => {
+  const i = Math.min(l.points.length - 2, Math.floor(x / l.gakuMax * N.LINE_STEPS));
+  const a = l.points[i], b = l.points[i + 1];
+  return a.y + (b.y - a.y) * (x - a.x) / (b.x - a.x);
+};
+
+test('線: 学力検査の満点（東京は教科の数、神奈川は満点の選択、ほかは値のファイル）と、満点の 50 分の 1 ずつの 51 点', () => {
+  assert.equal(N.examLine('tokyo', lineIn(4, 100)).gakuMax, 500);
+  assert.equal(N.examLine('tokyo', lineIn(4, 100, { kyoka: 3 })).gakuMax, 300);
+  assert.equal(N.examLine('kanagawa', lineIn(4, 100, { gakuMax: 300 })).gakuMax, 300);
+  assert.equal(N.examLine('hyogo', lineIn(4, 100)).gakuMax, V.PREFS.hyogo.gakuMax);
+  assert.equal(N.examLine('osaka', lineIn(4, 100)).gakuMax, V.PREFS.osaka.gakuMax);
+  for (const p of PREF6) {
+    const l = N.examLine(p, lineIn(4, 100));
+    assert.equal(l.points.length, N.LINE_STEPS + 1);
+    assert.equal(l.points[0].x, 0);
+    assert.equal(l.points[N.LINE_STEPS].x, l.gakuMax);
+  }
+});
+
+test('線: 縦の満点は、評定オール 5・学力検査満点の合計の得点', () => {
+  assert.equal(N.examLine('tokyo', lineIn(3, 100)).totalMax, V.PREFS.tokyo.total);
+  assert.equal(N.examLine('kanagawa', lineIn(3, 100)).totalMax, 1000);
+  assert.equal(N.examLine('osaka', lineIn(3, 100)).totalMax, V.PREFS.osaka.total);
+  assert.equal(N.examLine('hyogo', lineIn(3, 100, { gakku: '4' })).totalMax, 500 + V.PREFS.hyogo.kasan['4']);
+  const s = lineIn(3, 100, { conv: 400, mmul: 2 });
+  assert.equal(N.examLine('saitama', s).totalMax, N.saitama(s).totalMax);
+  const c = lineIn(3, 100, { k: 2 });
+  assert.equal(N.examLine('chiba', c).totalMax, 500 + N.chiba(c).choMax);
+});
+
+test('線: 印の位置 ＝ 欄の値（6 都府県 × 3 通り）', () => {
+  for (const p of PREF6) for (const x of [0, 237, 412.5]) {
+    const l = N.examLine(p, lineIn(3, x));
+    assert.equal(l.x, x, p + ' ' + x);
+  }
+});
+
+test('線: 印の高さ ＝ 結果の合計の得点で、印の所の線の高さとも合う（6 都府県 × 評定 2 通り × 点 3 通り ＝ 36 通り）', () => {
+  let n = 0;
+  for (const p of PREF6) for (const grade of [2, 5]) for (const x of [0, 237, 450]) {
+    const o = lineIn(grade, x);
+    const l = N.examLine(p, o);
+    assert.equal(l.y, shownTotal(p, N.calc(p, o)), `${p} ${grade} ${x}`);
+    close(lineAt(l, x), l.y, 1e-6);
+    n++;
+  }
+  assert.equal(n, 36);
+});
+
+test('線: 東京の 7:3 と 10:0 の高いほうは、高いほうの合計の得点を通る', () => {
+  const o = lineIn(2, 480, { ratio: 'best' });
+  const r = N.tokyo(o);
+  assert.equal(r.exam.used, 'alt');
+  assert.equal(N.examLine('tokyo', o).y, r.exam.best1000);
+});
+
+test('線: 目標の縦の線の位置 ＝ need.raw（6 都府県）。線は目標の高さで need.raw を通る。満点でも届かないときは over', () => {
+  const tg = { tokyo: 800, kanagawa: 700, hyogo: 400, osaka: 600, saitama: 600, chiba: 600 };
+  for (const p of PREF6) {
+    const o = lineIn(4, 300, { target: tg[p] });
+    const l = N.examLine(p, o);
+    assert.equal(l.need.raw, N.calc(p, o).need.raw);
+    assert.equal(l.need.over, false);
+    close(lineAt(l, l.need.raw), tg[p], 1e-6);
+  }
+  assert.equal(N.examLine('hyogo', lineIn(3, 300, { target: 495 })).need.over, true);
+  assert.equal(N.examLine('tokyo', lineIn(3, 300)).need, null);
+});
+
+test('線: 学力検査の欄が空・範囲の外・評定が欠けている → 線なし', () => {
+  for (const p of PREF6) {
+    assert.equal(N.examLine(p, lineIn(4, '')), null);
+    assert.equal(N.examLine(p, lineIn(4, 9999)), null);
+    assert.equal(N.examLine(p, { gaku: 300 }), null);
+  }
+});
+
+test('線の上の印: ← → で 1 点、Shift で 10 点。0〜満点に収め、小数は動かす向きの次の整数から', () => {
+  assert.deepEqual(N.LINE_KEYS, { small: 1, big: 10 });
+  assert.equal(N.gakuStep('350', 1, 500), 351);
+  assert.equal(N.gakuStep('350', -10, 500), 340);
+  assert.equal(N.gakuStep('350.5', 1, 500), 351);
+  assert.equal(N.gakuStep('350.5', -1, 500), 350);
+  assert.equal(N.gakuStep('495', 10, 500), 500);
+  assert.equal(N.gakuStep('3', -10, 500), 0);
+  assert.equal(N.gakuStep('', 1, 500), null);
+  assert.equal(N.gakuAt(0.5, 450), 225);
+  assert.equal(N.gakuAt(-0.2, 500), 0);
+  assert.equal(N.gakuAt(1.3, 300), 300);
+});
