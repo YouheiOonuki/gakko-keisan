@@ -138,3 +138,24 @@ test('出典のファイル: 確認日と e-Gov の URL。日付の既定値は�
   V.SOURCES.forEach(s => assert.match(s.url, /^https:\/\/laws\.e-gov\.go\.jp\//));
   assert.deepEqual(Object.keys(V).sort(), ['CHECKED', 'SOURCES', 'STALE_MONTHS']);
 });
+
+test('保存が空で開いたとき（Q-434）: お正月・次の 1 月 1 日・毎年。結果の数は今日から次の 1 月 1 日までの日数', () => {
+  // 手で数えた: 12-31 → あした 1 日。1-1 → 当日 0。うるう年の 2-29 → 3〜12 月 306 ＋ 1 ＝ 307
+  const cases = [['2026-12-31', '2027-01-01', 1, 'future'], ['2027-01-01', '2027-01-01', 0, 'today'], ['2028-02-29', '2029-01-01', 307, 'future'], ['2026-09-25', '2027-01-01', 98, 'future']];
+  for (const [t, date, days, state] of cases) {
+    const m = A.defaultMain(A.parse(t));
+    assert.deepEqual(m, { name: 'お正月', date, yearly: true, end: '' });
+    assert.deepEqual(A.normalizeItem(m), m);   // 保存・読み込みの形のまま
+    const r = A.compute(m, A.parse(t));
+    assert.equal(r.days, days);
+    assert.equal(r.state, state);
+    assert.equal(r.age, undefined);            // 「〇さいの」を付けない
+  }
+});
+
+test('名前の例: 先頭がお正月（毎年）', () => {
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '../atonannichi/index.html'), 'utf8');
+  const chips = [...html.matchAll(/<button type="button" class="chip" ([^>]*)>/g)].map(m => m[1]);
+  assert.equal(chips[0], 'data-name="お正月" data-yearly="1"');
+  assert.equal(chips.filter(c => c.includes('お正月')).length, 1);
+});
