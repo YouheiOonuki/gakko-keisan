@@ -1,6 +1,7 @@
 // ===========================
 // ○○まであと何日 — 画面の制御。計算は ../lib/atonannichi.js
 // 夏休みなどの日付の既定は置かない（学校・教育委員会ごとに違う）。名前の例のボタンは名前だけを入れる
+// 保存が空で開いたときだけ、お正月（次の 1 月 1 日。A.defaultMain）を入れて開く。それは保存せず、人が入力した時から保存する（Q-434）
 // ===========================
 (function () {
   'use strict';
@@ -8,6 +9,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var KEY = 'atonannichi';
   var MAX_ROWS = 10;
+  var keep = false;             // 保存するか。保存が空で開いた既定の 1 行は、人が入れるまで保存しない
   var ROW_MM_MAX = 32;          // 表の 1 週の高さの上限（週が少ないときにマスが縦に伸びすぎないように）
   var GRID_MM = 226;            // 表（曜日の行を除く）に使える高さ
 
@@ -184,12 +186,14 @@
       'd-sheet': ok ? 'A4 縦 ' + sp.s.pages.length + ' 枚' : 'A4 縦',
       'd-list': items.length ? items.length + ' 件' + (first && first.r && first.r.state !== 'past' ? '（いちばん近いのは ' + (first.it.name || 'その日') + '）' : '') : 'なし',
     });
-    C.store.set(KEY, d);
+    if (keep) C.store.set(KEY, d);
     window.yzUsed?.();
   }
 
   Array.prototype.forEach.call($('quick').children, function (b) {
     b.addEventListener('click', function () {
+      if (!keep && b.dataset.name !== $('name').value) $('date').value = '';   // 既定のお正月の日付を、ほかの名前に残さない
+      keep = true;
       $('name').value = b.dataset.name;
       $('yearly').checked = !!b.dataset.yearly;
       update();
@@ -201,10 +205,13 @@
   $('d-sheet').addEventListener('toggle', fitPreview);
   window.addEventListener('resize', fitPreview);
 
-  apply(C.store.get(KEY, {}));
-  $('form').addEventListener('input', update);
-  $('form').addEventListener('change', update);
-  C.wireFile({ key: KEY, current: current, apply: apply, update: update, msg: $('file-msg') });
+  var saved = C.store.get(KEY, null);
+  keep = saved !== null;
+  apply(keep ? saved : { main: A.defaultMain(A.today()) });
+  function edited() { keep = true; update(); }
+  $('form').addEventListener('input', edited);
+  $('form').addEventListener('change', edited);
+  C.wireFile({ key: KEY, current: current, apply: function (d) { keep = true; apply(d); }, update: update, msg: $('file-msg') });
   update();
   // 日付が変わったら（夜 0 時をまたいで開いたまま）数え直す
   var day = A.today();

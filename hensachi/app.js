@@ -43,7 +43,8 @@
 
   // --- 結果の下の山の図（正規分布）。位置と面の割合は H.bellMark（上位の割合と同じ関数） ---
   var SVGNS = 'http://www.w3.org/2000/svg';
-  var B = H.BELL, W = 600, L = 24, R = 24, TOP = 14, BASE = 158, HGT = 196;
+  // 目盛りの字は、裾（軸の上）に来た印のフォーカスの輪（印 44px ＋ 外 6px）がかからない所まで下げる（Q-434。390 幅で 42、1,280 幅で 32 の高さが要った）
+  var B = H.BELL, W = 600, L = 24, R = 24, TOP = 14, BASE = 158, NUM_Y = BASE + 78, HGT = NUM_Y + 6;
   function sx(t) { return L + (t - B.min) / (B.max - B.min) * (W - L - R); }
   function sy(h) { return BASE - h * (BASE - TOP); }
   function curve(from, to) {
@@ -68,7 +69,7 @@
     el('line', { class: 'bell-axis', x1: L, y1: BASE, x2: W - R, y2: BASE });
     B.ticks.forEach(function (k) {
       el('line', { class: 'bell-tick', x1: sx(k), y1: BASE, x2: sx(k), y2: BASE + 8 });
-      el('text', { class: 'bell-num', x: sx(k), y: BASE + 32, 'text-anchor': 'middle' }, String(k));
+      el('text', { class: 'bell-num', x: sx(k), y: NUM_Y, 'text-anchor': 'middle' }, String(k));
     });
     el('path', { class: 'bell-line', d: 'M' + curve(B.min, B.max).join(' L') });
     if (m) {
