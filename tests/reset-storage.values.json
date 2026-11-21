@@ -1,0 +1,27 @@
+{
+  "src": "reset-storage.js",
+  "prefixes": [
+    "gakko-keisan_"
+  ],
+  "legacy": [],
+  "pagePrefixes": {
+    "atonannichi/index.html": [
+      "gakko-keisan_atonannichi"
+    ],
+    "hensachi/index.html": [
+      "gakko-keisan_hensachi"
+    ],
+    "naishin/index.html": [
+      "gakko-keisan_naishin"
+    ],
+    "shusseki/index.html": [
+      "gakko-keisan_shusseki"
+    ],
+    "timer/index.html": [
+      "gakko-keisan_timer"
+    ]
+  },
+  "pageLegacy": {},
+  "inline": [],
+  "skipDirs": []
+}
