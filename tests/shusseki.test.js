@@ -116,3 +116,12 @@ test('升目: 1〜120 回・休んだ 0〜回数＋2 の全部で、升の合計
     assert.equal(g.absent + g.over, Math.min(a, n));
   }
 });
+
+test('画面の本文の最初の文は「何がわかるか」、断りはその後ろに字を変えずに（Q-977、ROADMAP 7.260 の 3 の 2）', () => {
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '../shusseki/index.html'), 'utf8');
+  const main = html.slice(html.indexOf('<main'));
+  const firstP = main.match(/<p\b[^>]*>([\s\S]*?)<\/p>/)[1];
+  assert.match(firstP, /^選んだ割合で、あと何回休めるかを出します。/);
+  assert.ok(firstP.includes('。法令の決まりではなく学校ごとの決まりです。生徒手帳などで確かめてください。'));
+  assert.equal(html.split('法令の決まりではなく学校ごとの決まりです。').length - 1, 1);
+});
