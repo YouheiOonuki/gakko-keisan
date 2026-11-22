@@ -140,3 +140,14 @@ test('山の印: 小数の点数は、動かした後は整数（← → で 1 �
   assert.ok(Number.isInteger(H.bellScoreAt(0.613, 58, 15)));
   assert.equal(H.bellStep('', 1, 58, 15), null);
 });
+
+test('使い方の最初の段落は求め方に答える文、リンクの段落はその次（Q-981、ROADMAP 7.260 の追補の 2、D744）', () => {
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '../hensachi/guide.html'), 'utf8');
+  const main = html.slice(html.indexOf('<main'));
+  const ps = [...main.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map((m) => m[1]);
+  assert.equal(ps[0], '偏差値は「50＋10×（点数−平均点）÷標準偏差」で求めます。点数 70 点・平均点 60 点・標準偏差 10 なら、偏差値は 60 です。');
+  assert.equal(ps[1], '<a href="./">▶ 偏差値を計算する</a>');
+  // 例の値は計算と合う。式の書き方は本文（#formula）と同じ
+  assert.equal(H.hensachi(70, 60, 10), 60);
+  assert.ok(html.includes('<p>偏差値＝50＋10×（点数−平均点）÷標準偏差。'));
+});
