@@ -64,3 +64,71 @@ test('画面: 例の 1 行の要素と lib/example.js を持ち、app.js が例�
   // 出席日数の「1 回休む」だけが、例を欄に入れる（押した時）
   assert.match(read('shusseki/app.js'), /if \(lastEx\)/);
 });
+
+// ---- 内申点（Q-1234、ROADMAP 続き 72 の答え D1069・D1060） ----
+const NV = require('../lib/naishin-values.js');
+const NA = require('../lib/naishin.js');
+const SUBJ = NV.SUBJECTS.map((s) => s.id);
+const blankNaishin = () => ({
+  pref: 'tokyo', sum1: '', sum2: '', g3: {},
+  tokyo: { kyoka: '5', ratio: '7:3', gaku: '', esat: '' },
+  kanagawa: { f: String(NV.PREFS.kanagawa.fDefault), gaku: '', gakuMax: '500' },
+  hyogo: { gaku: '', gakku: '' },
+  osaka: { type: NV.PREFS.osaka.typeDefault, gaku: '' },
+  saitama: { ratio: NV.PREFS.saitama.ratioDefault, conv: String(NV.PREFS.saitama.convDefault), gaku: '', mensetsu: '', mmul: '1' },
+  chiba: { k: String(NV.PREFS.chiba.kDefault), gaku: '' },
+  target: { tokyo: '', kanagawa: '', hyogo: '', osaka: '', saitama: '', chiba: '' },
+});
+const tgt0 = () => ({ tokyo: '', kanagawa: '', hyogo: '', osaka: '', saitama: '', chiba: '' });
+
+test('内申点の例: 東京都・9 教科すべて 3 を lib に渡した結果（素内申 27・換算内申 39）が、例の評定と同じ入力で出る。例の 1 行は例の値から作る', () => {
+  const g = E.naishinGrades(SUBJ);
+  assert.equal(Object.keys(g).length, 9);
+  assert.ok(Object.values(g).every((v) => v === 3));
+  const r = NA.calc('tokyo', { g, kyoka: '5', ratio: '7:3', gaku: '', esat: '', target: '' });
+  assert.equal(r.sonaishin, 27);
+  assert.equal(r.main5, 15);
+  assert.equal(r.jitsugi4, 12);
+  assert.equal(r.kansan, 39);
+  assert.equal(E.naishinLine(), '例: 東京都・9 教科すべて 3 の場合');
+});
+
+test('内申点: 何も入っていなければ（既定の東京都のまま）例を出す', () => {
+  assert.equal(E.naishinBlank(blankNaishin(), tgt0(), NV), true);
+  assert.equal(E.naishinBlank({}, {}, NV), true);
+});
+
+test('内申点: 評定を 1 つ選ぶ・都府県を替える・ほかの欄に入れる、のどれかで例を消す', () => {
+  const t = (mut) => { const d = blankNaishin(); mut(d); return E.naishinBlank(d, tgt0(), NV); };
+  assert.equal(t((d) => { d.g3 = { kokugo: 3 }; }), false, '評定を 1 つ');
+  for (const p of ['kanagawa', 'saitama', 'chiba', 'osaka', 'hyogo']) assert.equal(t((d) => { d.pref = p; }), false, p);
+  assert.equal(t((d) => { d.sum1 = '30'; }), false, 'sum1');
+  assert.equal(t((d) => { d.sum2 = '30'; }), false, 'sum2');
+  assert.equal(t((d) => { d.tokyo.gaku = '350'; }), false, '学力検査');
+  assert.equal(t((d) => { d.tokyo.kyoka = '3'; }), false, '3 教科');
+  assert.equal(t((d) => { d.tokyo.ratio = '6:4'; }), false, '比率');
+  assert.equal(t((d) => { d.tokyo.esat = 'A'; }), false, 'ESAT-J');
+  assert.equal(t((d) => { d.kanagawa.f = '4'; }), false, '神奈川の比率');
+  assert.equal(t((d) => { d.osaka.gaku = '300'; }), false, '大阪の学力検査');
+  assert.equal(t((d) => { d.saitama.mensetsu = '10'; }), false, '埼玉の面接');
+  assert.equal(t((d) => { d.chiba.gaku = '300'; }), false, '千葉の学力検査');
+  assert.equal(t((d) => { d.hyogo.gakku = '3'; }), false, '兵庫の学区');
+  assert.equal(E.naishinBlank(blankNaishin(), { ...tgt0(), tokyo: '800' }, NV), false, '目標点');
+});
+
+test('内申点: 保存した入力がある人（評定・合計・欄）には出さない', () => {
+  const saved = { ...blankNaishin(), g3: Object.fromEntries(SUBJ.map((id) => [id, 4])) };
+  assert.equal(E.naishinBlank(saved, tgt0(), NV), false);
+  assert.equal(E.naishinBlank({ ...blankNaishin(), pref: 'chiba', sum1: '30', sum2: '31' }, tgt0(), NV), false);
+});
+
+test('画面: 内申点は例の 1 行の要素と lib/example.js を持ち、app.js が例の評定で lib を呼び、評定のタイルには値を書き込まない', () => {
+  const html = read('naishin/index.html'), app = read('naishin/app.js');
+  assert.match(html, /<p class="ex-note" id="r-example" hidden><\/p>/);
+  assert.ok(html.indexOf('../lib/example.js') > 0 && html.indexOf('../lib/example.js') < html.indexOf('./app.js'));
+  assert.match(app, /E\.naishinBlank\(d, tgt, V\)/);
+  assert.match(app, /E\.naishinGrades\(SUBJ\)/);
+  assert.match(app, /\$\('r-example'\)\.hidden = !ex/);
+  // 例の評定は calcInput に渡すだけで、writeGrades（タイルを選んだ状態にする）は例の経路で呼ばない
+  assert.ok(!/ex[^;\n]*writeGrades/.test(app));
+});

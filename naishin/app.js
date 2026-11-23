@@ -3,7 +3,7 @@
 // ===========================
 (function () {
   'use strict';
-  var V = window.NaishinValues, N = window.Naishin, C = window.GakkoCommon;
+  var V = window.NaishinValues, N = window.Naishin, C = window.GakkoCommon, E = window.GakkoExample;
   var $ = function (id) { return document.getElementById(id); };
   var KEY = 'naishin';
   var PREF_IDS = ['tokyo', 'kanagawa', 'hyogo', 'osaka', 'saitama', 'chiba'];
@@ -267,7 +267,11 @@
     layout(pref);
     markMissing(pref);
     var P = V.PREFS[pref];
-    var input = calcInput(pref, d);
+    // 何も入っていない間は、結果の欄に「東京都・9 教科すべて 3」の結果を出す（lib/example.js）。評定のタイルは選ばないまま
+    var ex = E.naishinBlank(d, tgt, V);
+    $('r-example').hidden = !ex;
+    $('r-example').textContent = ex ? E.naishinLine() : '';
+    var input = calcInput(pref, ex ? Object.assign({}, d, { g3: E.naishinGrades(SUBJ) }) : d);
     var r = N.calc(pref, input);
     var rows = [], lead, big, sub, barText, note = '', examState = '入力なし', needText = '';
 
@@ -409,7 +413,7 @@
     renderLine(r ? N.examLine(pref, input) : null);
     $('r-note').textContent = r ? note + (note ? ' ' : '') + (P.basis || P.year + 'の入試の要綱で計算しています。') : '';
     $('need').textContent = r ? needText : (tgt[pref] ? '評定を選ぶと出ます。' : '');
-    bar.set(barText);
+    bar.set(ex ? '' : barText);
     window.YorozuScreen.detailsSummary({ 'd-exam': examState, 'd-target': tgt[pref] ? '目標 ' + tgt[pref] + ' 点' : '入力なし' });
     C.store.set(KEY, current());
     window.yzUsed?.();
