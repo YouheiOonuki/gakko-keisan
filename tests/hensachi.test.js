@@ -151,3 +151,14 @@ test('使い方の最初の段落は求め方に答える文、リンクの段�
   assert.equal(H.hensachi(70, 60, 10), 60);
   assert.ok(html.includes('<p>偏差値＝50＋10×（点数−平均点）÷標準偏差。'));
 });
+
+test('使い方: 検索に出る字（title・description・h1・最初の段落）は be020ff のまま、「偏差値の読み方」は「順位の目安の前提」の後・「よくある質問」の前（Q-1231、D1066）', () => {
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '../hensachi/guide.html'), 'utf8');
+  assert.ok(html.includes('<title>偏差値の求め方・順位の目安の使い方｜学校の計算機｜yorozu-craft</title>'));
+  assert.ok(html.includes('<meta name="description" content="偏差値の求め方（50＋10×(点数−平均点)÷標準偏差）、標準偏差がわからないときの出し方、人数から順位の目安を出すときの前提（正規分布）と、偏差値60は上位何%かを説明します。">'));
+  assert.ok(html.includes('<h1>偏差値の求め方と順位の目安の使い方</h1>'));
+  const a = html.indexOf('<h2>順位の目安の前提（正規分布）</h2>'), b = html.indexOf('<h2>偏差値の読み方</h2>'), c = html.indexOf('<h2>よくある質問</h2>');
+  assert.ok(a > 0 && a < b && b < c);
+  assert.ok(html.includes('<p>偏差値は、同じテストを受けた人の中での位置です。受けた人が違うテストどうしでは、同じ偏差値でも位置が違います。志望校の目安と比べるときは、その目安を出した模試の偏差値で比べます。</p>'));
+  assert.ok(!html.includes('根拠と確認日'));
+});
