@@ -125,3 +125,13 @@ test('画面の本文の最初の文は「何がわかるか」、断りはそ�
   assert.ok(firstP.includes('。法令の決まりではなく学校ごとの決まりです。生徒手帳などで確かめてください。'));
   assert.equal(html.split('法令の決まりではなく学校ごとの決まりです。').length - 1, 1);
 });
+
+test('使い方の最初の段落は休める回数の式と例、リンクの段落はその次。例の数は lib と同じ（Q-1231、D1065）', () => {
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '../shusseki/guide.html'), 'utf8');
+  const main = html.slice(html.indexOf('<main'));
+  const ps = [...main.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map((m) => m[1]);
+  assert.equal(ps[0], '高校で休める回数の上限は「授業の回数×（1−出席の割合）」で、小数点以下は切り捨てます。2単位（年70回）で3分の2の出席が要る学校なら、23回までです。');
+  assert.equal(ps[1], '<a href="./">▶ あと何回休めるか計算する</a>');
+  const S = require('../lib/shusseki.js');
+  assert.equal(S.limit({ total: 2 * 35, absent: 0, ratio: S.ratioOf('2/3') }).allowed, 23);
+});
