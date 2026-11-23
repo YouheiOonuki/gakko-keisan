@@ -3,7 +3,7 @@
 // ===========================
 (function () {
   'use strict';
-  var H = window.Hensachi, C = window.GakkoCommon;
+  var H = window.Hensachi, C = window.GakkoCommon, E = window.GakkoExample;
   var $ = function (id) { return document.getElementById(id); };
   var KEY = 'hensachi';
   var FIVE = ['国語', '数学', '英語', '理科', '社会'];
@@ -135,11 +135,16 @@
 
   function update() {
     var d = current();
-    var t = H.hensachi(d.score, d.mean, d.sd);
+    // 何も入っていない間は、結果の欄に例の値の結果を出す（lib/example.js）。上の欄は空のまま
+    var ex = E.hensachiBlank(d), m0 = ex ? E.HENSACHI : d;
+    $('r-example').hidden = !ex;
+    $('r-example').textContent = ex ? E.hensachiLine() : '';
+    var t = H.hensachi(m0.score, m0.mean, m0.sd);
     var rows = [];
     var nState = '入力なし';
     var mark = H.bellMark(t);
     renderBell(t, mark);
+    if (ex) markBtn.hidden = true;   // 例には引ける印を出さない（欄が空で、引いても動かない）
     if (t === null) {
       $('r-big').textContent = '—';
       $('r-sub').textContent = d.sd !== '' && Number(d.sd) <= 0 ? '標準偏差は 0 より大きい数を入れてください。' : '3つを入れると出ます。';
@@ -148,8 +153,8 @@
       var up = mark.share;
       $('r-big').textContent = f1(t);
       $('r-sub').textContent = '上位 約 ' + pct(up) + '（正規分布の仮定）';
-      bar.set('偏差値 ' + f1(t));
-      rows.push(row('計算', '50 ＋ 10 × (' + f2(Number(d.score)) + ' − ' + f2(Number(d.mean)) + ') ÷ ' + f2(Number(d.sd))));
+      bar.set(ex ? '' : '偏差値 ' + f1(t));
+      rows.push(row('計算', '50 ＋ 10 × (' + f2(Number(m0.score)) + ' − ' + f2(Number(m0.mean)) + ') ÷ ' + f2(Number(m0.sd))));
       var n = Math.floor(Number(d.n));
       if (d.n !== '' && n >= 1) {
         var rk = H.rankEstimate(t, n);
@@ -157,7 +162,7 @@
         nState = n + ' 人・約 ' + rk + ' 位';
       }
       [60, 65, 70].forEach(function (x) {
-        rows.push(row('偏差値 ' + x + ' の点数', f2(H.scoreFor(x, Number(d.mean), Number(d.sd))) + ' 点'));
+        rows.push(row('偏差値 ' + x + ' の点数', f2(H.scoreFor(x, Number(m0.mean), Number(m0.sd))) + ' 点'));
       });
     }
     $('r-table').tBodies[0].innerHTML = rows.join('');
