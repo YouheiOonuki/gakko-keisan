@@ -3,7 +3,7 @@
 // ===========================
 (function () {
   'use strict';
-  var S = window.Shusseki, V = window.ShussekiValues, C = window.GakkoCommon;
+  var S = window.Shusseki, V = window.ShussekiValues, C = window.GakkoCommon, E = window.GakkoExample;
   var $ = function (id) { return document.getElementById(id); };
   var KEY = 'shusseki';
   var MAX_ROWS = 20;
@@ -87,9 +87,14 @@
     });
     box.appendChild(svg);
   }
-  var lastL = null;
+  var lastL = null, lastEx = false;
   function step(dx) {
     if (!lastL) return;
+    if (lastEx) {   // 例を出している間に押したら、例の入力を欄に入れてから 1 回ぶん動かす
+      document.querySelectorAll('input[name="ratio"]').forEach(function (r) { r.checked = r.value === E.SHUSSEKI.ratio; });
+      $('total').value = String(E.SHUSSEKI.total);
+      $('absent').value = String(E.SHUSSEKI.absent);
+    }
     var a = Math.min(lastL.base, Math.max(0, lastL.absent + dx));
     $('absent').value = String(a);
     update();
@@ -99,9 +104,14 @@
 
   function update() {
     var d = current();
+    // 何も入っていない間は、結果の欄に例の値の結果を出す（lib/example.js）。上の欄は空のまま
+    var ex = E.shussekiBlank(d), m = ex ? E.SHUSSEKI : d;
     $('custom-row').hidden = d.ratio !== 'custom';
-    var ratio = S.ratioOf(d.ratio, d.custom);
-    var l = ratio ? S.limit({ total: d.total, absent: d.absent, excused: d.excused, ratio: ratio }) : null;
+    $('r-example').hidden = !ex;
+    $('r-example').textContent = ex ? E.shussekiLine() : '';
+    var userRatio = S.ratioOf(d.ratio, d.custom);
+    var ratio = S.ratioOf(m.ratio, m.custom);
+    var l = ratio ? S.limit({ total: m.total, absent: m.absent, excused: m.excused, ratio: ratio }) : null;
     var rows = [];
     $('r-big').classList.toggle('is-over', !!(l && l.over));
     if (!l) {
@@ -113,21 +123,21 @@
       if (l.over) {
         $('r-big').textContent = '上限を ' + (-l.remain) + ' 回 超えています';
         $('r-sub').textContent = '休める上限は ' + l.allowed + ' 回です。先生に早めに相談を。';
-        bar.set(-l.remain + ' 回超え');
+        bar.set(ex ? '' : -l.remain + ' 回超え');
       } else {
         $('r-big').textContent = 'あと ' + l.remain + ' 回';
         $('r-sub').textContent = '休める上限 ' + l.allowed + ' 回のうち ' + l.absent + ' 回休みました（' + ratio.label + '）';
-        bar.set('あと ' + l.remain + ' 回');
+        bar.set(ex ? '' : 'あと ' + l.remain + ' 回');
       }
-      rows.push(row('1年間の授業の回数', Math.floor(Number(d.total)) + ' 回'));
-      if (l.base !== Math.floor(Number(d.total))) rows.push(row('欠席に数えない回数を引く', l.base + ' 回', '出席しなければならない回数'));
+      rows.push(row('1年間の授業の回数', Math.floor(Number(m.total)) + ' 回'));
+      if (l.base !== Math.floor(Number(m.total))) rows.push(row('欠席に数えない回数を引く', l.base + ' 回', '出席しなければならない回数'));
       rows.push(row('出席が要る回数', l.need + ' 回', l.base + ' × ' + ratio.label + '（切り上げ）'));
       rows.push(row('休める上限', l.allowed + ' 回', l.base + ' × ' + (ratio.den === 1000 ? (keep / 10) + '%' : keep + '/' + ratio.den) + '（切り捨て）', true));
       rows.push(row('休んだ回数', l.absent + ' 回'));
       rows.push(row(l.over ? '超えた回数' : '残り', (l.over ? -l.remain : l.remain) + ' 回', null, true));
     }
     $('r-table').tBodies[0].innerHTML = rows.join('');
-    lastL = l;
+    lastL = l; lastEx = ex;
     var g = S.grid(l);
     renderGrid(g, $('r-big').textContent + ' ' + $('r-sub').textContent);
     if (g) { $('masu-add').disabled = l.absent >= l.base; $('masu-back').disabled = l.absent <= 0; }
@@ -138,7 +148,7 @@
     $('units-use').disabled = !h;
 
     // 科目の一覧
-    var t = ratio ? S.table(d.rows, ratio) : [];
+    var t = userRatio ? S.table(d.rows, userRatio) : [];
     $('list-table').tBodies[0].innerHTML = t.length
       ? '<tr><th>科目</th><td>上限 / 残り</td></tr>' + t.map(function (x) {
         return row(esc(x.name), x.r.allowed + ' / ' + (x.r.over ? (-x.r.remain) + ' 回超え' : 'あと ' + x.r.remain + ' 回'), x.total + ' 回');
@@ -148,7 +158,7 @@
     window.YorozuScreen.detailsSummary({
       'd-units': h ? d.units + ' 単位 → ' + h + ' 回' : '入力なし',
       'd-excused': ex + ' 回',
-      'd-list': t.length ? t.length + ' 科目（いちばん少ないのは ' + t[0].name + '）' : (ratio ? '入力なし' : '割合を選ぶと出ます'),
+      'd-list': t.length ? t.length + ' 科目（いちばん少ないのは ' + t[0].name + '）' : (userRatio ? '入力なし' : '割合を選ぶと出ます'),
     });
     // 共有リンクで開いた直後は、端末に残っている入力を上書きしない。触ったら保存する（K191 段 3 F5）
     if (!fromShare) C.store.set(KEY, d);

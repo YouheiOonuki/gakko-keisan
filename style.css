@@ -143,6 +143,8 @@ fieldset.card { min-width: 0; }
 .result-card:focus { outline: none; }
 .result-big { font-size: var(--fs-xl); font-weight: 800; color: var(--accent); line-height: var(--lh-tight); }
 .result-sub { color: var(--muted); }
+/* 開いた時の例（lib/example.js）。入れた結果と見分けるため、結果の見出しの下に「例:」の 1 行を出す */
+.ex-note { font-size: var(--fs-s); color: var(--muted); margin: 0 0 var(--sp-2); }
 
 /* くわしく入れる（1 グループ 1 つの details）。summary の .opt-state に今の状態を出す（screen.js の detailsSummary） */
 details.card.opt { padding-block: 0; margin-bottom: var(--sp-3); }
