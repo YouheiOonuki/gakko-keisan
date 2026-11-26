@@ -1,0 +1,11 @@
+{
+  "html": {
+    "atonannichi/guide.html": "lib/atonannichi-values.js#CHECKED",
+    "naishin/guide.html": "lib/naishin-values.js#CHECKED",
+    "naishin/index.html": "lib/naishin-values.js#CHECKED",
+    "shusseki/guide.html": "lib/shusseki-values.js#CHECKED"
+  },
+  "notTied": {
+    "timer/guide.html": "根拠は W3C Screen Wake Lock API の仕様だけで、値のファイルを持たない（画面の値は無い）"
+  }
+}
