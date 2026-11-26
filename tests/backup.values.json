@@ -1,0 +1,12 @@
+{
+  "module": "lib/common.js",
+  "tool": "gakko-keisan",
+  "data": {
+    "naishin": {
+      "pref": "tokyo"
+    }
+  },
+  "required": [
+    "naishin"
+  ]
+}
